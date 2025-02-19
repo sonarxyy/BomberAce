@@ -7,6 +7,7 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
 [Lazy Foo](https://lazyfoo.net/tutorials/SDL/)
 [Let's Make Games](https://www.youtube.com/playlist?list=PLhfAbcv9cehhkG7ZQK0nfIGJC_C-wSLrx)
 [Game Programming Pattern](https://gameprogrammingpatterns.com/contents.html)
+[CMake Tutorial](https://cmake.org/cmake/help/latest/guide/tutorial/index.html)
 
 # Credits
 

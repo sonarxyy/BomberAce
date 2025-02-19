@@ -20,7 +20,7 @@ bool Engine::Initialize(const char* title, int posX, int posY, int SCREEN_WIDTH,
 	}
 	else {
 		window = SDL_CreateWindow(title, posX, posY, SCREEN_WIDTH, SCREEN_HEIGHT, fullscreenFlag);
-		renderer = SDL_CreateRenderer(window,-1,0);
+		renderer = SDL_CreateRenderer(window, -1, 0);
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		isRunning = true;
 	}
@@ -32,9 +32,16 @@ bool Engine::getRunningState() {
 }
 
 void Engine::Run() {
-	Update();
-	Render();
-	Clean();
+	Uint32 lastFrameTime = SDL_GetTicks();
+	while (isRunning) {
+		Uint32 currentFrameTime = SDL_GetTicks();
+		float deltaTime = (currentFrameTime - lastFrameTime) / 1000.0f;
+		lastFrameTime = currentFrameTime;
+
+		Update();
+		Render();
+		Clean();
+	}
 }
 
 void Engine::HandleEvents() {
@@ -49,7 +56,7 @@ void Engine::HandleEvents() {
 	}
 }
 
-void Engine::Update() {
+void Engine::Update(float deltaTime) {
 	// TODO: Update everything
 }
 
