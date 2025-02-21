@@ -2,6 +2,8 @@
 #define ENGINE_HPP
 
 #include <SDL.h>
+#include <texture_manager.hpp>
+
 class Engine {
 public:
 	Engine();
@@ -16,6 +18,7 @@ private:
 	bool isRunning;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
+	TextureManager* textureManager;
 	void Update(float deltaTime);
 	void Render();
 };

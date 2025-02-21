@@ -1,6 +1,6 @@
 #include <engine.hpp>
 
-Engine::Engine() : isRunning(false), window(nullptr), renderer(nullptr) {
+Engine::Engine() : isRunning(false), window(nullptr), renderer(nullptr), textureManager(nullptr) {
 	// TODO: Init other things
 }
 
@@ -16,6 +16,7 @@ bool Engine::Initialize(const char* title, int posX, int posY, int SCREEN_WIDTH,
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		// TODO: Handle Error
+		SDL_Log("Could not initialize SDL Subsystem");
 		isRunning = false;
 	}
 	else {
@@ -24,6 +25,11 @@ bool Engine::Initialize(const char* title, int posX, int posY, int SCREEN_WIDTH,
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		isRunning = true;
 	}
+
+	// TODO: Initialize texture
+	textureManager = new TextureManager(renderer);
+	
+
 	return isRunning;
 }
 
@@ -38,7 +44,7 @@ void Engine::Run() {
 		float deltaTime = (currentFrameTime - lastFrameTime) / 1000.0f;
 		lastFrameTime = currentFrameTime;
 
-		Update();
+		Update(deltaTime);
 		Render();
 		Clean();
 	}
@@ -66,6 +72,7 @@ void Engine::Render() {
 }
 
 void Engine::Clean() {
+	delete textureManager;
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
