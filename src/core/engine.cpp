@@ -1,4 +1,7 @@
 #include <engine.hpp>
+#include <game_object.hpp>
+
+GameObject* playerObj;
 
 Engine::Engine() : isRunning(false), window(nullptr), renderer(nullptr), textureManager(nullptr) {
 	// TODO: Init other things
@@ -26,9 +29,8 @@ bool Engine::Initialize(const char* title, int posX, int posY, int SCREEN_WIDTH,
 		isRunning = true;
 	}
 
-	// TODO: Initialize texture
-	textureManager = new TextureManager(renderer);
-	
+	// TODO: Initialize object
+	playerObj = new GameObject("assets/purple_body_circle.png", renderer, 0, 0);
 
 	return isRunning;
 }
@@ -46,8 +48,8 @@ void Engine::Run() {
 
 		Update(deltaTime);
 		Render();
-		Clean();
 	}
+	Clean();
 }
 
 void Engine::HandleEvents() {
@@ -64,10 +66,12 @@ void Engine::HandleEvents() {
 
 void Engine::Update(float deltaTime) {
 	// TODO: Update everything
+	playerObj->Update(deltaTime);
 }
 
 void Engine::Render() {
 	SDL_RenderClear(renderer);
+	playerObj->Render();
 	SDL_RenderPresent(renderer);
 }
 

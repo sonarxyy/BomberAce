@@ -1,2 +1,2 @@
-add_library(engine engine.cpp)
-target_include_directories(engine PUBLIC ${CMAKE_SOURCE_DIR}/include)
+add_library(core game_object.cpp engine.cpp)
+target_include_directories(core PUBLIC ${CMAKE_SOURCE_DIR}/include)
