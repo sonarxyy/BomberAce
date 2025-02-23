@@ -1,9 +1,11 @@
 #include <engine.hpp>
-#include <game_object.hpp>
 
 GameObject* playerObj;
+SDL_Texture* backgroundTxt;
+AudioManager* audioManager;
+Mix_Music* music;
 
-Engine::Engine() : isRunning(false), window(nullptr), renderer(nullptr), textureManager(nullptr) {
+Engine::Engine() : isRunning(false), window(nullptr), renderer(nullptr), music(nullptr) {
 	// TODO: Init other things
 }
 
@@ -24,14 +26,17 @@ bool Engine::Initialize(const char* title, int posX, int posY, int SCREEN_WIDTH,
 	}
 	else {
 		window = SDL_CreateWindow(title, posX, posY, SCREEN_WIDTH, SCREEN_HEIGHT, fullscreenFlag);
-		renderer = SDL_CreateRenderer(window, -1, 0);
+		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); // Render with supported GPU
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		isRunning = true;
 	}
 
 	// TODO: Initialize object
 	playerObj = new GameObject("assets/purple_body_circle.png", renderer, 0, 0);
-
+	backgroundTxt = TextureManager::LoadTexture("assets/backgroundDesert.png", renderer);
+	audioManager = new AudioManager;
+	music = audioManager->LoadMusic("assets/music.mp3");
+	audioManager->PlayMusic(music);
 	return isRunning;
 }
 
@@ -71,12 +76,12 @@ void Engine::Update(float deltaTime) {
 
 void Engine::Render() {
 	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, backgroundTxt, 0, 0);
 	playerObj->Render();
 	SDL_RenderPresent(renderer);
 }
 
 void Engine::Clean() {
-	delete textureManager;
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();

@@ -2,7 +2,7 @@
 
 std::map<const char*, SDL_Texture*> TextureManager::textures;
 
-TextureManager::TextureManager(){
+TextureManager::TextureManager() {
 	// TODO: Other initializations
 }
 
@@ -17,7 +17,7 @@ SDL_Texture* TextureManager::LoadTexture(const char* path, SDL_Renderer* rendere
 
 	SDL_Texture* texture = IMG_LoadTexture(renderer, path);
 	if (texture == nullptr) { 
-		SDL_Log("Error loading texture %s", path);
+		SDL_Log("Error loading texture: %s", path);
 		return nullptr;
 	}
 

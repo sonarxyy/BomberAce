@@ -6,12 +6,12 @@ GameObject::GameObject(const char* path, SDL_Renderer* renderer, int x, int y) :
 }
 
 GameObject::~GameObject() {
-
+	
 }
 
 void GameObject::Update(float deltaTime) {
-	xPos++ * deltaTime; // Update position
-	yPos++ * deltaTime; // Update position
+	xPos++ * deltaTime;
+	yPos++ * deltaTime;
 
 	srcRect.x = 0;
 	srcRect.y = 0;

@@ -12,7 +12,8 @@ add_dependencies("ShapeDominance" copy_assets)
 
 add_subdirectory(src/core)
 add_subdirectory(src/graphics)
+add_subdirectory(src/audio)
 
 target_link_directories("ShapeDominance" PRIVATE lib)
-target_link_libraries("ShapeDominance" PRIVATE core graphics SDL2 SDL2main SDL2_image)
+target_link_libraries("ShapeDominance" PRIVATE core graphics audio SDL2 SDL2main SDL2_image SDL2_mixer)
 target_include_directories("ShapeDominance" PRIVATE include)

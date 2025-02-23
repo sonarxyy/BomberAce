@@ -4,8 +4,8 @@ Engine* engine = nullptr;
 const char* title = "Shape Dominance";
 int posX = SDL_WINDOWPOS_UNDEFINED;
 int posY = SDL_WINDOWPOS_UNDEFINED;
-int SCREEN_WIDTH = 640;
-int SCREEN_HEIGHT = 480;
+int SCREEN_WIDTH = 1920;
+int SCREEN_HEIGHT = 1080;
 bool fullscreen = 0;
 
 int main(int argc, char* argv[]) {

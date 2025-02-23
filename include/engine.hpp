@@ -2,7 +2,10 @@
 #define ENGINE_HPP
 
 #include <SDL.h>
+#include <SDL_mixer.h>
 #include <texture_manager.hpp>
+#include <game_object.hpp>
+#include <audio_manager.hpp>
 
 class Engine {
 public:
@@ -18,7 +21,8 @@ private:
 	bool isRunning;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-	TextureManager* textureManager;
+	Mix_Music* music;
+
 	void Update(float deltaTime);
 	void Render();
 };
