@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include <text_manager.hpp>
 #include <texture_manager.hpp>
 #include <game_object.hpp>
 #include <audio_manager.hpp>

@@ -18,6 +18,11 @@ Một dự án trò chơi nhỏ được viết bằng C++ dựa trên thư vi�
 - Game Object: Quản lý các đối tượng của trò chơi.
   - Cập nhật đối tượng.
   - Kết xuất đối tượng.
+- Text Manager: Quản lý kết xuất chữ.
+  - Tái sử dụng phông chữ.
+  - Tạo đồ họa từ chữ.
+  - Bỏ nạp phông chữ.
+  - Bỏ nạp đồ họa tạo từ phông chữ.
 - Texture Manager: Quản lý đồ họa của trò chơi.
   - Tái sử dụng đồ họa (nếu đồ họa đã được nạp).
   - Nạp vào đồ họa.

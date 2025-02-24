@@ -2,6 +2,8 @@
 
 GameObject* playerObj;
 SDL_Texture* backgroundTxt;
+SDL_Texture* text;
+TextManager* textMananger;
 AudioManager* audioManager;
 Mix_Music* music;
 
@@ -32,10 +34,12 @@ bool Engine::Initialize(const char* title, int posX, int posY, int SCREEN_WIDTH,
 	}
 
 	// TODO: Initialize object
-	playerObj = new GameObject("assets/purple_body_circle.png", renderer, 0, 0);
-	backgroundTxt = TextureManager::LoadTexture("assets/backgroundDesert.png", renderer);
+	playerObj = new GameObject("assets/image/purple_body_circle.png", renderer, 0, 0);
+	textMananger = new TextManager(renderer);
+	text = textMananger->CreateTextureFromText(textMananger->LoadFont("assets/font/times.ttf", 10), "Hello", {0, 0, 0});
+	backgroundTxt = TextureManager::LoadTexture("assets/image/backgroundDesert.png", renderer);
 	audioManager = new AudioManager;
-	music = audioManager->LoadMusic("assets/music.mp3");
+	music = audioManager->LoadMusic("assets/audio/music.mp3");
 	audioManager->PlayMusic(music);
 	return isRunning;
 }
@@ -77,6 +81,7 @@ void Engine::Update(float deltaTime) {
 void Engine::Render() {
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, backgroundTxt, 0, 0);
+	SDL_RenderCopy(renderer, text, 0, 0);
 	playerObj->Render();
 	SDL_RenderPresent(renderer);
 }

@@ -14,7 +14,7 @@ AudioManager::~AudioManager() {
 Mix_Music* AudioManager::LoadMusic(const char* path) {
 	music = Mix_LoadMUS(path);
 	if (music == nullptr) {
-		SDL_Log("Cannot load music %s", path);
+		SDL_Log("Cannot load music: %s", path);
 		return nullptr;
 	}
 	return music;
@@ -46,7 +46,7 @@ Mix_Chunk* AudioManager::LoadSound(const char* path) {
 
 	Mix_Chunk* chunk = Mix_LoadWAV(path);
 	if (chunk == nullptr) {
-		SDL_Log("Cannot load sound %s", path);
+		SDL_Log("Cannot load sound: %s", path);
 		return nullptr;
 	}
 	sounds[path] = chunk;

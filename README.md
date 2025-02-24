@@ -18,6 +18,11 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
 - Game Object: Manage game objects of the game.
   - Update Object.
   - Render Object.
+- Text Manager: Manage text rendering of the game.
+  - Reused loaded font.
+  - Create Texture from text.
+  - Unload font.
+  - Unload texture created from font.
 - Texture Manager: Manage texture of the game.
   - Reused loaded texture.
   - Load Texture.
