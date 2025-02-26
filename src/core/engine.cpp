@@ -3,9 +3,11 @@
 GameObject* playerObj;
 SDL_Texture* backgroundTxt;
 SDL_Texture* text;
+TextureManager* textureManager;
 TextManager* textMananger;
 AudioManager* audioManager;
 Mix_Music* music;
+MainMenu* mainMenu;
 
 Engine::Engine() : isRunning(false), window(nullptr), renderer(nullptr), music(nullptr) {
 	// TODO: Init other things
@@ -15,7 +17,7 @@ Engine::~Engine() {
 	Clean();
 }
 
-bool Engine::Initialize(const char* title, int posX, int posY, int SCREEN_WIDTH, int SCREEN_HEIGHT, bool fullscreen) {
+bool Engine::Initialize(const char* title, int posX, int posY, int screenWidth, int screenHeight, bool fullscreen) {
 	int fullscreenFlag = 0;
 	if (fullscreen == true) {
 		fullscreenFlag = SDL_WINDOW_FULLSCREEN;
@@ -27,20 +29,22 @@ bool Engine::Initialize(const char* title, int posX, int posY, int SCREEN_WIDTH,
 		isRunning = false;
 	}
 	else {
-		window = SDL_CreateWindow(title, posX, posY, SCREEN_WIDTH, SCREEN_HEIGHT, fullscreenFlag);
+		window = SDL_CreateWindow(title, posX, posY, screenWidth, screenHeight, fullscreenFlag);
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); // Render with supported GPU
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		isRunning = true;
 	}
 
-	// TODO: Initialize object
-	playerObj = new GameObject("assets/image/purple_body_circle.png", renderer, 0, 0);
+	// TODO: Initialize
+	mainMenu = new MainMenu(renderer, screenWidth, screenHeight);
+	mainMenu->Render();
+	playerObj = new GameObject(PLAYER_FILE, renderer, 0, 0);
 	textMananger = new TextManager(renderer);
-	text = textMananger->CreateTextureFromText(textMananger->LoadFont("assets/font/times.ttf", 10), "Hello", {0, 0, 0});
-	backgroundTxt = TextureManager::LoadTexture("assets/image/backgroundDesert.png", renderer);
+	text = textMananger->CreateTextureFromText(textMananger->LoadFont(FONT_FILE, 10), "Test", ORANGE);
+	textureManager = new TextureManager(renderer);
 	audioManager = new AudioManager;
-	music = audioManager->LoadMusic("assets/audio/music.mp3");
-	audioManager->PlayMusic(music);
+	// music = audioManager->LoadMusic(MUSIC_FILE);
+	// audioManager->PlayMusic(music);
 	return isRunning;
 }
 
@@ -75,14 +79,15 @@ void Engine::HandleEvents() {
 
 void Engine::Update(float deltaTime) {
 	// TODO: Update everything
-	playerObj->Update(deltaTime);
+	// playerObj->Update(deltaTime);
 }
 
 void Engine::Render() {
-	SDL_RenderClear(renderer);
+	/*
 	SDL_RenderCopy(renderer, backgroundTxt, 0, 0);
 	SDL_RenderCopy(renderer, text, 0, 0);
-	playerObj->Render();
+	playerObj->Render();*/
+	mainMenu->Render();
 	SDL_RenderPresent(renderer);
 }
 

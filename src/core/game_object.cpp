@@ -1,6 +1,6 @@
 #include <game_object.hpp>
 
-GameObject::GameObject(const char* path, SDL_Renderer* renderer, int x, int y) : objTexture(TextureManager::LoadTexture(path, renderer)), objRenderer(renderer) {
+GameObject::GameObject(const char* path, SDL_Renderer* renderer, int x, int y) : textureManager(new TextureManager(renderer)) {
 	xPos = x;
 	yPos = y;
 }
@@ -10,8 +10,8 @@ GameObject::~GameObject() {
 }
 
 void GameObject::Update(float deltaTime) {
-	xPos++ * deltaTime;
-	yPos++ * deltaTime;
+	// xPos++ * deltaTime;
+	// yPos++ * deltaTime;
 
 	srcRect.x = 0;
 	srcRect.y = 0;

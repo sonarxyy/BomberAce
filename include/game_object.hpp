@@ -2,6 +2,7 @@
 #define GAME_OBJECT_HPP
 
 #include <SDL.h>
+#include <constants.hpp>
 #include <texture_manager.hpp>
 
 class GameObject {
@@ -18,6 +19,7 @@ protected: // So that derived class can have access to
 	int height;
 
 private:
+	TextureManager* textureManager;
 	SDL_Texture* objTexture;
 	SDL_Rect srcRect, dstRect;
 	SDL_Renderer* objRenderer;

@@ -1,6 +1,6 @@
 #include "text_manager.hpp"
 
-TextManager::TextManager(SDL_Renderer* renderer) : renderer(renderer) {
+TextManager::TextManager(SDL_Renderer* renderer) : renderer(renderer), textWidth(0), textHeight(0) {
     if (TTF_Init() == -1) {
         SDL_Log("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
     }
@@ -9,6 +9,14 @@ TextManager::TextManager(SDL_Renderer* renderer) : renderer(renderer) {
 TextManager::~TextManager() {
     Clean();
     TTF_Quit();
+}
+
+int TextManager::getWidth() {
+    return textWidth;
+}
+
+int TextManager::getHeight() {
+    return textHeight;
 }
 
 TTF_Font* TextManager::LoadFont(const char* fontPath, int fontSize) {
@@ -35,6 +43,9 @@ SDL_Texture* TextManager::CreateTextureFromText(TTF_Font* font, const char* text
     }
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    textWidth = surface->w;
+    textHeight = surface->h;
+
     SDL_FreeSurface(surface);
 
     if (texture == nullptr) {

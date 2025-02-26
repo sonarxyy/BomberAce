@@ -1,14 +1,11 @@
-<div style="text-align:center;">
-
 [![Static Badge](https://img.shields.io/badge/Ng%C3%B4n_ng%E1%BB%AF-Ti%E1%BA%BFng_Vi%E1%BB%87t-blue)](https://github.com/sonarxyy/ShapeDominance/blob/main/README-vi.md)
 
-</div>
 
 # Shape Dominance
 Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/FrontPage).
 
 
-# Game Class Components
+# Game Manager Class Components
 - Engine: Manage core functionalities of the game.
   - Initialize core functions of the game.
   - Handle Events.
@@ -34,6 +31,11 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
   - Halt BGM.
   - Pause, resume BGM.
   - Set BGM, SFX volume.
+- Constants : Define constants for the game.
+
+
+# Game Components
+- Main Menu.
 
 
 # Build and Installation
@@ -50,6 +52,7 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
 
 
 # Credits
-#### All assets by Kenny
-[![Static Badge](https://img.shields.io/badge/Patreon-white?style=flat&logo=patreon&labelColor=black)](https://www.patreon.com/kenney)
-[![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://kenney.itch.io/)
+| Author |                                                                 Patreon                                                                |                                                             Itch.io                                                             |
+|:------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
+|  Kenny | [![Static Badge](https://img.shields.io/badge/Patreon-white?style=flat&logo=patreon&labelColor=black)](https://www.patreon.com/kenney) | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://kenney.itch.io/) |
+| Lynocs |                                                                   N/A                                                                  | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://lynocs.itch.io/) |

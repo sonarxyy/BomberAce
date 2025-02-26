@@ -11,6 +11,9 @@ public:
     TextManager(SDL_Renderer* renderer);
     ~TextManager();
 
+    int getWidth();
+    int getHeight();
+
     TTF_Font* LoadFont(const char* fontPath, int fontSize);
     SDL_Texture* CreateTextureFromText(TTF_Font* font, const char* text, SDL_Color color);
     void UnloadFont(TTF_Font* font);
@@ -19,6 +22,8 @@ public:
 
 private:
     SDL_Renderer* renderer;
+    int textWidth;
+    int textHeight;
     std::map<std::pair<const char*, int>, TTF_Font*> fonts; // Store font path, size
     std::vector<SDL_Texture*> textures; // Store created textures for cleanup
 };

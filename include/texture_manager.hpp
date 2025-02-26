@@ -7,14 +7,15 @@
 
 class TextureManager {
 public:
-	TextureManager();
+	TextureManager(SDL_Renderer* renderer);
 	~TextureManager();
-	static SDL_Texture* LoadTexture(const char* path, SDL_Renderer* renderer);
-	static void UnloadTexture(const char* path);
+	SDL_Texture* LoadTexture(const char* path);
+	void UnloadTexture(const char* path);
 	void Clean();
 
 private:
-	static std::map<const char*, SDL_Texture*> textures; // Storing texture
+	SDL_Renderer* renderer;
+	std::map<const char*, SDL_Texture*> textures; // Storing texture
 };
 
 #endif

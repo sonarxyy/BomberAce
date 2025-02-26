@@ -1,8 +1,6 @@
 #include <texture_manager.hpp>
 
-std::map<const char*, SDL_Texture*> TextureManager::textures;
-
-TextureManager::TextureManager() {
+TextureManager::TextureManager(SDL_Renderer* renderer) : renderer(renderer) {
 	// TODO: Other initializations
 }
 
@@ -10,7 +8,7 @@ TextureManager::~TextureManager() {
 	Clean();
 }
 
-SDL_Texture* TextureManager::LoadTexture(const char* path, SDL_Renderer* renderer) {
+SDL_Texture* TextureManager::LoadTexture(const char* path) {
 	if (textures.find(path) != textures.end()) { // If texture is loaded
 		return textures[path];
 	}
