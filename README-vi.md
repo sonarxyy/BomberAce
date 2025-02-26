@@ -39,6 +39,19 @@ Một dự án trò chơi nhỏ được viết bằng C++ dựa trên thư vi�
 
 
 # Xây dựng và cài đặt
+1. Cài đặt [CMake](https://github.com/Kitware/CMake/releases/download/v4.0.0-rc2/cmake-4.0.0-rc2-windows-x86_64.msi) (Chọn "Add CMake to the PATH environment variable").
+2. Clone repository. 
+```
+git clone https://github.com/sonarxyy/ShapeDominance.git
+```
+3. Xây dựng.
+Inside cloned directory, enter build directory, type:
+```
+cmake ..
+cmake --build .
+```
+4. Mở thư mục Debug rồi khởi động trò chơi.
+5. Chúc bạn chơi game vui vẻ.
 
 
 # Tham khảo
