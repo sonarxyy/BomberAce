@@ -45,6 +45,7 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
 git clone https://github.com/sonarxyy/ShapeDominance.git
 ```
 3. Build.
+First of all, you need to ensure that gcc or g++ compiler is included in your environment variable.
 Inside cloned directory, enter build directory, type:
 ```
 cmake ..

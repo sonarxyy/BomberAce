@@ -45,6 +45,7 @@ Một dự án trò chơi nhỏ được viết bằng C++ dựa trên thư vi�
 git clone https://github.com/sonarxyy/ShapeDominance.git
 ```
 3. Xây dựng.
+Trước hết cần đảm bảo trình biên dịch gcc hoặc g++ được thêm vào biến môi trường.
 Trong thư mục vừa clone, vào thư mục build, gõ:
 ```
 cmake ..
