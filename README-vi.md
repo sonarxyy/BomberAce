@@ -39,13 +39,13 @@ Một dự án trò chơi nhỏ được viết bằng C++ dựa trên thư vi�
 
 
 # Xây dựng và cài đặt
-1. Cài đặt [CMake](https://github.com/Kitware/CMake/releases/download/v4.0.0-rc2/cmake-4.0.0-rc2-windows-x86_64.msi) (Chọn "Add CMake to the PATH environment variable").
+1. Cài đặt [CMake](https://github.com/Kitware/CMake/releases/download/v4.0.0-rc2/cmake-4.0.0-rc2-windows-x86_64.msi) (Chọn "Add CMake to the PATH environment variable", nếu ô đã được chọn thì để nguyên).
 2. Clone repository. 
 ```
 git clone https://github.com/sonarxyy/ShapeDominance.git
 ```
 3. Xây dựng.
-Inside cloned directory, enter build directory, type:
+Trong thư mục vừa clone, vào thư mục build, gõ:
 ```
 cmake ..
 cmake --build .
@@ -65,7 +65,7 @@ cmake --build .
 
 
 # Nguồn
-| Author |                                                                 Patreon                                                                |                                                             Itch.io                                                             |
+| Tác giả |                                                                 Patreon                                                                |                                                             Itch.io                                                             |
 |:------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
 |  Kenny | [![Static Badge](https://img.shields.io/badge/Patreon-white?style=flat&logo=patreon&labelColor=black)](https://www.patreon.com/kenney) | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://kenney.itch.io/) |
 | Lynocs |                                                                   N/A                                                                  | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://lynocs.itch.io/) |

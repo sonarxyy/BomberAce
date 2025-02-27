@@ -39,7 +39,7 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
 
 
 # Build and Installation
-1. Install [CMake](https://github.com/Kitware/CMake/releases/download/v4.0.0-rc2/cmake-4.0.0-rc2-windows-x86_64.msi) (Tick "Add CMake to the PATH environment variable").
+1. Install [CMake](https://github.com/Kitware/CMake/releases/download/v4.0.0-rc2/cmake-4.0.0-rc2-windows-x86_64.msi) (Tick "Add CMake to the PATH environment variable", if it is checked don't tick it).
 2. Clone my repository. 
 ```
 git clone https://github.com/sonarxyy/ShapeDominance.git
