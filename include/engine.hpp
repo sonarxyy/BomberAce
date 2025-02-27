@@ -25,6 +25,7 @@ private:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	Mix_Music* music;
+	GameState gameState;
 
 	void Update(float deltaTime);
 	void Render();

@@ -27,7 +27,16 @@ constexpr const char* FONT_FILE = "assets/font/font.ttf";
 constexpr const char* PLAYER_FILE = "assets/image/purple_body_circle.png";
 constexpr const char* BACKGROUND_FILE = "assets/image/backgroundDesert.png";
 constexpr const char* MUSIC_FILE = "assets/audio/music.mp3";
-constexpr const char* SELECTOR_FILE = "assets/image/panel-transparent-center.png";
+constexpr const char* SELECTOR_SFX_FILE = "assets/audio/selector_sfx.ogg";
+constexpr const char* SELECTOR_TEXTURE_FILE = "assets/image/selector.png";
 constexpr const char* MAINMENU_BACKGROUND = "assets/image/mainUIbackground.png";
+
+// Game states
+enum GameState {
+    InMainMenu,
+    Playing,
+    Paused,
+    GameOver,
+};
 
 #endif

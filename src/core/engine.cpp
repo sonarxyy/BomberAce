@@ -9,7 +9,9 @@ AudioManager* audioManager;
 Mix_Music* music;
 MainMenu* mainMenu;
 
-Engine::Engine() : isRunning(false), window(nullptr), renderer(nullptr), music(nullptr) {
+Engine::Engine() : isRunning(false), window(nullptr), renderer(nullptr), music(nullptr)
+{
+	gameState = InMainMenu;
 	// TODO: Init other things
 }
 
@@ -35,7 +37,7 @@ bool Engine::Initialize(const char* title, int posX, int posY, int screenWidth, 
 		isRunning = true;
 	}
 
-	// TODO: Initialize
+	// Initialize
 	mainMenu = new MainMenu(renderer, screenWidth, screenHeight);
 	mainMenu->Render();
 	playerObj = new GameObject(PLAYER_FILE, renderer, 0, 0);
@@ -59,6 +61,7 @@ void Engine::Run() {
 		float deltaTime = (currentFrameTime - lastFrameTime) / 1000.0f;
 		lastFrameTime = currentFrameTime;
 
+		HandleEvents();
 		Update(deltaTime);
 		Render();
 	}
@@ -67,19 +70,21 @@ void Engine::Run() {
 
 void Engine::HandleEvents() {
 	SDL_Event event;
-	switch (SDL_PollEvent(&event))
-	{
-	case SDL_QUIT:
-		isRunning = false;
-		break;
-	default:
-		break;
+	while (SDL_PollEvent(&event)) {
+		switch (gameState) {
+		case InMainMenu:
+			mainMenu->HandleInput(event);
+			break;
+		case GameOver:
+			break;
+		}
 	}
 }
 
 void Engine::Update(float deltaTime) {
 	// TODO: Update everything
 	// playerObj->Update(deltaTime);
+	mainMenu->UpdateSelectorPosition();
 }
 
 void Engine::Render() {
@@ -87,6 +92,7 @@ void Engine::Render() {
 	SDL_RenderCopy(renderer, backgroundTxt, 0, 0);
 	SDL_RenderCopy(renderer, text, 0, 0);
 	playerObj->Render();*/
+	SDL_RenderClear(renderer);
 	mainMenu->Render();
 	SDL_RenderPresent(renderer);
 }
