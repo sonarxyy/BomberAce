@@ -71,7 +71,7 @@ ninja
 
 
 # Nguồn
-| Author |          Thành phần trò chơi        |                                                                 Patreon                                                                |                                                             Itch.io                                                             |
+| Tác giả |          Thành phần trò chơi        |                                                                 Patreon                                                                |                                                             Itch.io                                                             |
 |:------:|:-----------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
 |  Kenny | Giao diện chính, Âm thanh, Đồ họa | [![Static Badge](https://img.shields.io/badge/Patreon-white?style=flat&logo=patreon&labelColor=black)](https://www.patreon.com/kenney) | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://kenney.itch.io/) |
 | Lynocs |        Hình nền       |                                                                   N/A                                                                  | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://lynocs.itch.io/) |
