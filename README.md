@@ -46,8 +46,9 @@ git clone https://github.com/sonarxyy/ShapeDominance.git
 2. Install and Build.
 > [!IMPORTANT]
 > First of all, you need to ensure that C/C++ compiler is included in your environment variable.
-Inside cloned directory, run install.bat as administrator.
-3. Open the game.
+
+   Inside cloned directory, run install.bat as administrator.  
+3. Open the game.  
 4. Enjoy.
 
 
