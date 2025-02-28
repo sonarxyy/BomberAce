@@ -56,24 +56,25 @@ void MainMenu::CreateDisplay() {
 	selectorTexture = textureManager->LoadTexture(SELECTOR_TEXTURE_FILE);
 	SDL_QueryTexture(selectorTexture, NULL, NULL, &selectorRect.w, &selectorRect.h); //get width and height
 	selectorSFX = audioManager->LoadSound(SELECTOR_SFX_FILE);
+	selectedSFX = audioManager->LoadSound(SELECTED_SFX_FILE);
 }
 
 void MainMenu::HandleInput(SDL_Event& event) {
-	if (event.type == SDL_KEYDOWN) {
+	if (event.type == SDL_KEYDOWN) { // Check for keyboard event
 		switch (event.key.keysym.sym) {
 		case SDLK_UP:
 		case SDLK_w:
 			switch (selectedOption) {
-			case MenuOption::Start:
-				selectedOption = MenuOption::Quit;
+			case Start:
+				selectedOption = Quit;
 				audioManager->PlaySound(selectorSFX);
 				break;
-			case MenuOption::Options:
-				selectedOption = MenuOption::Start;
+			case Options:
+				selectedOption = Start;
 				audioManager->PlaySound(selectorSFX);
 				break;
-			case MenuOption::Quit:
-				selectedOption = MenuOption::Options;
+			case Quit:
+				selectedOption = Options;
 				audioManager->PlaySound(selectorSFX);
 				break;
 			default:
@@ -83,16 +84,16 @@ void MainMenu::HandleInput(SDL_Event& event) {
 		case SDLK_DOWN:
 		case SDLK_s:
 			switch (selectedOption) {
-			case MenuOption::Start:
-				selectedOption = MenuOption::Options;
+			case Start:
+				selectedOption = Options;
 				audioManager->PlaySound(selectorSFX);
 				break;
-			case MenuOption::Options:
-				selectedOption = MenuOption::Quit;
+			case Options:
+				selectedOption = Quit;
 				audioManager->PlaySound(selectorSFX);
 				break;
-			case MenuOption::Quit:
-				selectedOption = MenuOption::Start;
+			case Quit:
+				selectedOption = Start;
 				audioManager->PlaySound(selectorSFX);
 				break;
 			default:
@@ -101,9 +102,95 @@ void MainMenu::HandleInput(SDL_Event& event) {
 			break;
 		case SDLK_RETURN:
 			// TODO: Enter other UI when pressing Enter.
+			switch (selectedOption) {
+			case Start:
+				audioManager->PlaySound(selectedSFX);
+				break;
+			case Options:
+				audioManager->PlaySound(selectedSFX);
+				break;
+			case Quit:
+				SDL_Event quitEvent;
+				quitEvent.type = SDL_QUIT;
+				SDL_PushEvent(&quitEvent);
+				break;
+			}
 			break;
 		default:
 			break;
+		}
+	}
+	else if (event.type == SDL_MOUSEMOTION || event.type == SDL_MOUSEBUTTONDOWN) { // Check for mouse motion event
+		int mouseX, mouseY;
+		SDL_GetMouseState(&mouseX, &mouseY);
+
+		SDL_Point mousePoint = { mouseX, mouseY }; // Create a point for the mouse
+
+		if (SDL_PointInRect(&mousePoint, &startRect)) {
+			if (selectedOption != Start) { // Check if the option changed
+				selectedOption = Start;
+				audioManager->PlaySound(selectorSFX);
+			}
+			if (event.type == SDL_MOUSEBUTTONDOWN) {
+				audioManager->PlaySound(selectedSFX);
+			}
+		}
+		else if (SDL_PointInRect(&mousePoint, &optionsRect)) {
+			if (selectedOption != Options) { // Check if the option changed
+				selectedOption = Options;
+				audioManager->PlaySound(selectorSFX);
+			}
+			if (event.type == SDL_MOUSEBUTTONDOWN) {
+				audioManager->PlaySound(selectedSFX);
+			}
+		}
+		else if (SDL_PointInRect(&mousePoint, &quitRect)) {
+			if (selectedOption != Quit) { // Check if the option changed
+				selectedOption = Quit;
+				audioManager->PlaySound(selectorSFX);
+			}
+			if (event.type == SDL_MOUSEBUTTONDOWN) {
+				SDL_Event quitEvent;
+				quitEvent.type = SDL_QUIT;
+				SDL_PushEvent(&quitEvent);
+			}
+		}
+	} else if (event.type == SDL_MOUSEWHEEL) { // Handle mouse wheel events
+		if (event.wheel.y > 0) { // Scroll up
+			switch (selectedOption) {
+			case Start:
+				selectedOption = Quit;
+				audioManager->PlaySound(selectorSFX);
+				break;
+			case Options:
+				selectedOption = Start;
+				audioManager->PlaySound(selectorSFX);
+				break;
+			case Quit:
+				selectedOption = Options;
+				audioManager->PlaySound(selectorSFX);
+				break;
+			default:
+				break;
+			}
+		}
+		else if (event.wheel.y < 0) { // Scroll down
+			switch (selectedOption) {
+			case Start:
+				selectedOption = Options;
+				audioManager->PlaySound(selectorSFX);
+				break;
+			case Options:
+				selectedOption = Quit;
+				audioManager->PlaySound(selectorSFX);
+				break;
+			case Quit:
+				selectedOption = Start;
+				audioManager->PlaySound(selectorSFX);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 }
