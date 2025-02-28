@@ -56,6 +56,7 @@ void MainMenu::CreateDisplay() {
 	selectorTexture = textureManager->LoadTexture(SELECTOR_TEXTURE_FILE);
 	SDL_QueryTexture(selectorTexture, NULL, NULL, &selectorRect.w, &selectorRect.h); //get width and height
 	selectorSFX = audioManager->LoadSound(SELECTOR_SFX_FILE);
+	selectedSFX = audioManager->LoadSound(SELECTED_SFX_FILE);
 }
 
 void MainMenu::HandleInput(SDL_Event& event) {
@@ -101,6 +102,7 @@ void MainMenu::HandleInput(SDL_Event& event) {
 			break;
 		case SDLK_RETURN:
 			// TODO: Enter other UI when pressing Enter.
+			audioManager->PlaySound(selectedSFX);
 			break;
 		default:
 			break;

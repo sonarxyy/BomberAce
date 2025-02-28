@@ -33,6 +33,7 @@ private:
     SDL_Texture* selectorTexture;
     SDL_Rect selectorRect;
     Mix_Chunk* selectorSFX;
+    Mix_Chunk* selectedSFX;
 
     // for selector
     enum MenuOption {

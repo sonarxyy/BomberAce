@@ -39,20 +39,16 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
 
 
 # Build and Installation
-1. Install [CMake](https://github.com/Kitware/CMake/releases/download/v4.0.0-rc2/cmake-4.0.0-rc2-windows-x86_64.msi) (Tick "Add CMake to the PATH environment variable", if it is checked don't tick it).
-2. Clone my repository. 
+1. Clone my repository. 
 ```
 git clone https://github.com/sonarxyy/ShapeDominance.git
 ```
-3. Build.
-First of all, you need to ensure that gcc or g++ compiler is included in your environment variable.
-Inside cloned directory, enter build directory, type:
-```
-cmake ..
-cmake --build .
-```
-4. Open Debug folder then open the game.
-5. Enjoy.
+2. Install and Build.
+> [!IMPORTANT]
+> First of all, you need to ensure that C/C++ compiler is included in your environment variable.
+Inside cloned directory, run install.bat as administrator.
+3. Open the game.
+4. Enjoy.
 
 
 # References
@@ -66,7 +62,7 @@ cmake --build .
 
 
 # Credits
-| Author |                                                                 Patreon                                                                |                                                             Itch.io                                                             |
-|:------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
-|  Kenny | [![Static Badge](https://img.shields.io/badge/Patreon-white?style=flat&logo=patreon&labelColor=black)](https://www.patreon.com/kenney) | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://kenney.itch.io/) |
-| Lynocs |                                                                   N/A                                                                  | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://lynocs.itch.io/) |
+| Author |          Assets         |                                                                 Patreon                                                                |                                                             Itch.io                                                             |
+|:------:|:-----------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
+|  Kenny | Main UI, Audio, Texture | [![Static Badge](https://img.shields.io/badge/Patreon-white?style=flat&logo=patreon&labelColor=black)](https://www.patreon.com/kenney) | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://kenney.itch.io/) |
+| Lynocs |        Background       |                                                                   N/A                                                                  | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://lynocs.itch.io/) |
