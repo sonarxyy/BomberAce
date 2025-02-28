@@ -40,18 +40,23 @@ Một dự án trò chơi nhỏ được viết bằng C++ dựa trên thư vi�
 
 # Xây dựng và cài đặt
 1. Cài đặt [CMake](https://github.com/Kitware/CMake/releases/download/v4.0.0-rc2/cmake-4.0.0-rc2-windows-x86_64.msi) (Chọn "Add CMake to the PATH environment variable", nếu ô đã được chọn thì để nguyên).
+Cài đặt [Ninja](https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-win.zip) và thêm nó vào biến môi trường.
+> [!NOTE]
+> Có thể bỏ qua bước này nếu bạn đã có CMake và Ninja được cài đặt và thêm vào biến môi trường.
 2. Clone repository. 
 ```
 git clone https://github.com/sonarxyy/ShapeDominance.git
 ```
 3. Xây dựng.
-Trước hết cần đảm bảo trình biên dịch gcc hoặc g++ được thêm vào biến môi trường.
-Trong thư mục vừa clone, vào thư mục build, gõ:
+Trước hết cần đảm bảo trình biên dịch C/C++ được thêm vào biến môi trường.
+Trong thư mục vừa clone, gõ:
 ```
-cmake ..
-cmake --build .
+mkdir build
+cd build
+cmake -G "Ninja" ..
+ninja
 ```
-4. Mở thư mục Debug rồi khởi động trò chơi.
+4. Khởi động trò chơi.
 5. Chúc bạn chơi game vui vẻ.
 
 
@@ -66,7 +71,7 @@ cmake --build .
 
 
 # Nguồn
-| Tác giả |                                                                 Patreon                                                                |                                                             Itch.io                                                             |
-|:------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
-|  Kenny | [![Static Badge](https://img.shields.io/badge/Patreon-white?style=flat&logo=patreon&labelColor=black)](https://www.patreon.com/kenney) | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://kenney.itch.io/) |
-| Lynocs |                                                                   N/A                                                                  | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://lynocs.itch.io/) |
+| Author |          Thành phần trò chơi        |                                                                 Patreon                                                                |                                                             Itch.io                                                             |
+|:------:|:-----------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
+|  Kenny | Giao diện chính, Âm thanh, Đồ họa | [![Static Badge](https://img.shields.io/badge/Patreon-white?style=flat&logo=patreon&labelColor=black)](https://www.patreon.com/kenney) | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://kenney.itch.io/) |
+| Lynocs |        Hình nền       |                                                                   N/A                                                                  | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://lynocs.itch.io/) |
