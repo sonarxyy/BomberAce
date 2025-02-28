@@ -46,6 +46,7 @@ git clone https://github.com/sonarxyy/ShapeDominance.git
 2. Cài đặt và xây dựng.
 > [!IMPORTANT]
 > Đầu tiên, đảm bảo rằng trình biên dịch C/C++ được thêm vào biến môi trường.
+
 Trong thư mục vừa clone, chạy install.bat với quyền quản trị viên.
 3. Khởi động trò chơi.
 4. Tận hưởng.
