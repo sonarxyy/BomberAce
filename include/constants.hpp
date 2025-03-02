@@ -30,14 +30,7 @@ constexpr const char* MUSIC_FILE = "assets/audio/music.mp3";
 constexpr const char* SELECTOR_SFX_FILE = "assets/audio/selector_sfx.ogg";
 constexpr const char* SELECTED_SFX_FILE = "assets/audio/selected_sfx.ogg";
 constexpr const char* SELECTOR_TEXTURE_FILE = "assets/image/selector.png";
-constexpr const char* MAINMENU_BACKGROUND = "assets/image/mainUIbackground.png";
-
-// Game states
-enum GameState {
-    InMainMenu,
-    Playing,
-    Paused,
-    GameOver,
-};
+constexpr const char* MAINMENU_BACKGROUND = "assets/image/mainmenubackground.png";
+constexpr const char* OPTIONSMENU_BACKGROUND = "assets/image/optionsmenubackground.png";
 
 #endif

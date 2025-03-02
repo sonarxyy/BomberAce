@@ -11,14 +11,6 @@ TextManager::~TextManager() {
     TTF_Quit();
 }
 
-int TextManager::getWidth() {
-    return textWidth;
-}
-
-int TextManager::getHeight() {
-    return textHeight;
-}
-
 TTF_Font* TextManager::LoadFont(const char* fontPath, int fontSize) {
     std::pair<const char*, int> fontKey = std::make_pair(fontPath, fontSize);
     if (fonts.find(fontKey) != fonts.end()) {

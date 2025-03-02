@@ -6,10 +6,11 @@
 #include <text_manager.hpp>
 #include <texture_manager.hpp>
 #include <audio_manager.hpp>
+#include <game_states_manager.hpp>
 
 class MainMenu {
 public:
-    MainMenu(SDL_Renderer* renderer, int screenWidth, int screenHeight);
+    MainMenu(SDL_Renderer* renderer);
     ~MainMenu();
     void CreateDisplay();
     void HandleInput(SDL_Event& event);
@@ -17,21 +18,30 @@ public:
     void Render();
 
 private:
-    int screenWidth;
-    int screenHeight;
+    int screenWidth, screenHeight;
 
     TTF_Font* font;
     SDL_Texture* mainMenuBackground;
+
     SDL_Texture* gameTitleTexture;
     SDL_Rect gameTitleRect;
+
     SDL_Texture* startTexture;
     SDL_Rect startRect;
+
     SDL_Texture* optionsTexture;
     SDL_Rect optionsRect;
+
     SDL_Texture* quitTexture;
     SDL_Rect quitRect;
+
     SDL_Texture* selectorTexture;
     SDL_Rect selectorRect;
+
+    SDL_Texture* selectedStartTexture;
+    SDL_Texture* selectedOptionsTexture;
+    SDL_Texture* selectedQuitTexture;
+
     Mix_Chunk* selectorSFX;
     Mix_Chunk* selectedSFX;
 
@@ -42,6 +52,7 @@ private:
         Quit
     };
     MenuOption selectedOption;
+
     TextManager* textManager;
     TextureManager* textureManager;
     AudioManager* audioManager;

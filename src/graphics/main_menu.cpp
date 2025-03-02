@@ -1,15 +1,17 @@
 #include "main_menu.hpp"
 
-MainMenu::MainMenu(SDL_Renderer* renderer, int screenWidth, int screenHeight) : renderer(renderer), screenWidth(SCREEN_WIDTH), screenHeight(SCREEN_HEIGHT), font(nullptr), selectedOption(Start), selectorSFX(nullptr) {
+MainMenu::MainMenu(SDL_Renderer* renderer) : renderer(renderer), screenWidth(SCREEN_WIDTH), screenHeight(SCREEN_HEIGHT), font(nullptr), selectedOption(Start), selectorSFX(nullptr) {
 	textManager = new TextManager(renderer);
 	textureManager = new TextureManager(renderer);
 	audioManager = new AudioManager();
+	GameStateManager::setGameState(InMainMenu);
 	CreateDisplay();
 }
 
 MainMenu::~MainMenu() {
 	delete textureManager;
 	delete textManager;
+	delete audioManager;
 }
 
 void MainMenu::CreateDisplay() {
@@ -19,44 +21,40 @@ void MainMenu::CreateDisplay() {
 	font = textManager->LoadFont(FONT_FILE, 40);
 	// Game Title
 	gameTitleTexture = textManager->CreateTextureFromText(font, "Shape Dominance", WHITE);
-
-	gameTitleRect.x = (SCREEN_WIDTH - textManager->getWidth()) / 2;
+	SDL_QueryTexture(gameTitleTexture, NULL, NULL, &gameTitleRect.w, &gameTitleRect.h);
+	gameTitleRect.x = (SCREEN_WIDTH - gameTitleRect.w) / 2;
 	gameTitleRect.y = SCREEN_HEIGHT * 2 / 4;
-	gameTitleRect.w = textManager->getWidth();
-	gameTitleRect.h = textManager->getHeight();
 
 	font = textManager->LoadFont(FONT_FILE, 20);
 
 	// Start
 	startTexture = textManager->CreateTextureFromText(font, "Start Game", WHITE);
-
-	startRect.x = (SCREEN_WIDTH - textManager->getWidth()) / 2;
+	SDL_QueryTexture(startTexture, NULL, NULL, &startRect.w, &startRect.h);
+	startRect.x = (SCREEN_WIDTH - startRect.w) / 2;
 	startRect.y = SCREEN_HEIGHT * 3 / 4;
-	startRect.w = textManager->getWidth();
-	startRect.h = textManager->getHeight();
-
 
 	// Options
 	optionsTexture = textManager->CreateTextureFromText(font, "Options", WHITE);
-
-	optionsRect.x = (SCREEN_WIDTH - textManager->getWidth()) / 2;
+	SDL_QueryTexture(optionsTexture, NULL, NULL, &optionsRect.w, &optionsRect.h);
+	optionsRect.x = (SCREEN_WIDTH - optionsRect.w) / 2;
 	optionsRect.y = startRect.y + startRect.h;
-	optionsRect.w = textManager->getWidth();
-	optionsRect.h = textManager->getHeight();
 
 	// Quit
 	quitTexture = textManager->CreateTextureFromText(font, "Quit", WHITE);
-
-	quitRect.x = (SCREEN_WIDTH - textManager->getWidth()) / 2;
+	SDL_QueryTexture(quitTexture, NULL, NULL, &quitRect.w, &quitRect.h);
+	quitRect.x = (SCREEN_WIDTH - quitRect.w) / 2;
 	quitRect.y = optionsRect.y + optionsRect.h;
-	quitRect.w = textManager->getWidth();
-	quitRect.h = textManager->getHeight();
 
 	// Selector
 	selectorTexture = textureManager->LoadTexture(SELECTOR_TEXTURE_FILE);
-	SDL_QueryTexture(selectorTexture, NULL, NULL, &selectorRect.w, &selectorRect.h); //get width and height
+	SDL_QueryTexture(selectorTexture, NULL, NULL, &selectorRect.w, &selectorRect.h);
 	selectorSFX = audioManager->LoadSound(SELECTOR_SFX_FILE);
 	selectedSFX = audioManager->LoadSound(SELECTED_SFX_FILE);
+
+	// Selected
+	selectedStartTexture = textManager->CreateTextureFromText(font, "Start Game", YELLOW);
+	selectedOptionsTexture = textManager->CreateTextureFromText(font, "Options", YELLOW);
+	selectedQuitTexture = textManager->CreateTextureFromText(font, "Quit", YELLOW);
 }
 
 void MainMenu::HandleInput(SDL_Event& event) {
@@ -104,9 +102,11 @@ void MainMenu::HandleInput(SDL_Event& event) {
 			// TODO: Enter other UI when pressing Enter.
 			switch (selectedOption) {
 			case Start:
+				GameStateManager::setGameState(Playing);
 				audioManager->PlaySound(selectedSFX);
 				break;
 			case Options:
+				GameStateManager::setGameState(InOptionsMenu);
 				audioManager->PlaySound(selectedSFX);
 				break;
 			case Quit:
@@ -132,6 +132,7 @@ void MainMenu::HandleInput(SDL_Event& event) {
 				audioManager->PlaySound(selectorSFX);
 			}
 			if (event.type == SDL_MOUSEBUTTONDOWN) {
+				GameStateManager::setGameState(Playing);
 				audioManager->PlaySound(selectedSFX);
 			}
 		}
@@ -141,6 +142,7 @@ void MainMenu::HandleInput(SDL_Event& event) {
 				audioManager->PlaySound(selectorSFX);
 			}
 			if (event.type == SDL_MOUSEBUTTONDOWN) {
+				GameStateManager::setGameState(InOptionsMenu);
 				audioManager->PlaySound(selectedSFX);
 			}
 		}
@@ -218,8 +220,25 @@ void MainMenu::UpdateSelectorPosition() {
 void MainMenu::Render() {
 	SDL_RenderCopy(renderer, mainMenuBackground, NULL, NULL);
 	SDL_RenderCopy(renderer, gameTitleTexture, NULL, &gameTitleRect);
-	SDL_RenderCopy(renderer, startTexture, NULL, &startRect);
-	SDL_RenderCopy(renderer, optionsTexture, NULL, &optionsRect);
-	SDL_RenderCopy(renderer, quitTexture, NULL, &quitRect);
+	switch (selectedOption) {
+	case Start:
+		SDL_RenderCopy(renderer, selectedStartTexture, NULL, &startRect);
+		SDL_RenderCopy(renderer, optionsTexture, NULL, &optionsRect);
+		SDL_RenderCopy(renderer, quitTexture, NULL, &quitRect);
+		break;
+	case Options:
+		SDL_RenderCopy(renderer, startTexture, NULL, &startRect);
+		SDL_RenderCopy(renderer, selectedOptionsTexture, NULL, &optionsRect);
+		SDL_RenderCopy(renderer, quitTexture, NULL, &quitRect);
+		break;
+	case Quit:
+		SDL_RenderCopy(renderer, startTexture, NULL, &startRect);
+		SDL_RenderCopy(renderer, optionsTexture, NULL, &optionsRect);
+		SDL_RenderCopy(renderer, selectedQuitTexture, NULL, &quitRect);
+		break;
+	default:
+		break;
+	}
+
 	SDL_RenderCopy(renderer, selectorTexture, NULL, &selectorRect);
 }

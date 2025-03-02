@@ -36,6 +36,7 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
 
 # Game Components
 - Main Menu.
+- Options Menu.
 
 
 # Build and Installation
@@ -45,9 +46,11 @@ git clone https://github.com/sonarxyy/ShapeDominance.git
 ```
 2. Install and Build.
 > [!IMPORTANT]
-> First of all, you need to ensure that C/C++ compiler is included in your environment variable.
+> First of all, you need to ensure that C/C++ compiler is included in your environment variable.  
+> [!NOTE]
+> Từ lần sau, chỉ cần chạy build.bat để xây dựng trò chơi.
 
-   Inside cloned directory, run install.bat as administrator.  
+Inside cloned directory, run install.bat as administrator.  
 3. Open the game.  
 4. Enjoy.
 

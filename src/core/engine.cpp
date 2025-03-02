@@ -8,10 +8,10 @@ TextManager* textMananger;
 AudioManager* audioManager;
 Mix_Music* music;
 MainMenu* mainMenu;
+OptionsMenu* optionsMenu;
 
 Engine::Engine() : isRunning(false), window(nullptr), renderer(nullptr), music(nullptr)
 {
-	gameState = InMainMenu;
 	// TODO: Init other things
 }
 
@@ -38,8 +38,8 @@ bool Engine::Initialize(const char* title, int posX, int posY, int screenWidth, 
 	}
 
 	// Initialize
-	mainMenu = new MainMenu(renderer, screenWidth, screenHeight);
-	mainMenu->Render();
+	mainMenu = new MainMenu(renderer);
+	optionsMenu = new OptionsMenu(renderer);
 	playerObj = new GameObject(PLAYER_FILE, renderer, 0, 0);
 	textMananger = new TextManager(renderer);
 	text = textMananger->CreateTextureFromText(textMananger->LoadFont(FONT_FILE, 10), "Test", ORANGE);
@@ -50,7 +50,7 @@ bool Engine::Initialize(const char* title, int posX, int posY, int screenWidth, 
 	return isRunning;
 }
 
-bool Engine::getRunningState() {
+bool Engine::getRunningState() const {
 	return isRunning;
 }
 
@@ -74,9 +74,16 @@ void Engine::HandleEvents() {
 		if (event.type == SDL_QUIT) {
 			isRunning = false;
 		}
-		switch (gameState) {
+		switch (GameStateManager::getGameState()) {
 		case InMainMenu:
 			mainMenu->HandleInput(event);
+			break;
+		case InOptionsMenu:
+			optionsMenu->HandleInputs(event);
+			break;
+		case Playing:
+			break;
+		case Paused:
 			break;
 		case GameOver:
 			break;
@@ -86,21 +93,38 @@ void Engine::HandleEvents() {
 
 void Engine::Update(float deltaTime) {
 	// TODO: Update everything
-	// playerObj->Update(deltaTime);
-	mainMenu->UpdateSelectorPosition();
+	switch (GameStateManager::getGameState()) {
+	case InMainMenu:
+		mainMenu->UpdateSelectorPosition();
+		break;
+	case InOptionsMenu:
+		optionsMenu->Update();
+		break;
+	}
+
+
 }
 
 void Engine::Render() {
-	/*
-	SDL_RenderCopy(renderer, backgroundTxt, 0, 0);
-	SDL_RenderCopy(renderer, text, 0, 0);
-	playerObj->Render();*/
-	SDL_RenderClear(renderer);
-	mainMenu->Render();
-	SDL_RenderPresent(renderer);
+	switch (GameStateManager::getGameState()) {
+	case InMainMenu:
+		SDL_RenderClear(renderer);
+		mainMenu->Render();
+		SDL_RenderPresent(renderer);
+		break;
+	case InOptionsMenu:
+		SDL_RenderClear(renderer);
+		optionsMenu->Render();
+		SDL_RenderPresent(renderer);
+		break;
+	}
 }
 
 void Engine::Clean() {
+	delete playerObj;
+	delete textureManager;
+	delete textMananger;
+	delete audioManager;
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();

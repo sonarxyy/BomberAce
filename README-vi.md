@@ -35,7 +35,8 @@ Một dự án trò chơi nhỏ được viết bằng C++ dựa trên thư vi�
 
 
 # Thành phần của trò chơi
-- Main Menu.
+- Menu chính.
+- Menu tùy chọn.
 
 
 # Xây dựng và cài đặt
@@ -47,10 +48,12 @@ git clone https://github.com/sonarxyy/ShapeDominance.git
 2. Cài đặt và xây dựng.
 > [!IMPORTANT]
 > Đầu tiên, đảm bảo rằng trình biên dịch C/C++ được thêm vào biến môi trường.
+> [!NOTE]
+> Từ lần sau, chỉ cần chạy build.bat để xây dựng trò chơi.
 
-   Trong thư mục vừa clone, chạy install.bat với quyền quản trị viên.  
+Trong thư mục vừa clone, chạy install.bat với quyền quản trị viên.  
 3. Khởi động trò chơi.  
-4. Tận hưởng.
+4. Chúc bạn chơi trò chơi vui vẻ.
 
 
 # Tham khảo
