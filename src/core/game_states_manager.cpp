@@ -1,4 +1,4 @@
-#include <game_states_manager.hpp>
+#include "game_states_manager.hpp"
 
 GameState GameStateManager::currentGameState = InMainMenu;
 

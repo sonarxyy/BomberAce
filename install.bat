@@ -3,20 +3,20 @@ setlocal
 
 echo Installing CMake and Ninja...
 
-:: Define installation paths (adjust as needed)
+:: Ask user for CMake installation
+echo I recommend you choosing Y if you haven't installed CMake.
+choice /M "Do you want to download and install CMake? (Y/N)"
+if errorlevel 2 goto ninja_ask
+
+:: Define CMake installation path (adjust as needed)
 set "INSTALL_DIR=%USERPROFILE%\Downloads\Tools"
 set "CMAKE_INSTALL_DIR=%INSTALL_DIR%\CMake"
-set "NINJA_INSTALL_DIR=%INSTALL_DIR%\Ninja"
 
 :: CMake Download URL (find the latest release from cmake.org/download)
 set "CMAKE_DOWNLOAD_URL=https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-windows-x86_64.zip"
 
-:: Ninja Download URL (find the latest release from github.com/ninja-build/ninja/releases)
-set "NINJA_DOWNLOAD_URL=https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-win.zip"
-
-:: Temporary download locations
+:: Temporary download location
 set "CMAKE_ZIP=%TEMP%\cmake.zip"
-set "NINJA_ZIP=%TEMP%\ninja.zip"
 
 :: Create Tools Directory
 if not exist "%INSTALL_DIR%" mkdir "%INSTALL_DIR%"
@@ -33,7 +33,7 @@ if not exist "%CMAKE_INSTALL_DIR%" mkdir "%CMAKE_INSTALL_DIR%"
 echo Checking if CMake install directory is empty...
 for /f "delims=" %%a in ('dir /b "%CMAKE_INSTALL_DIR%"') do (
     echo CMake install directory is not empty. Skipping CMake extraction.
-    goto ninja_download
+    goto ninja_ask
 )
 
 :: Extract CMake
@@ -41,7 +41,21 @@ echo Extracting CMake...
 powershell -Command "Expand-Archive -Path '%CMAKE_ZIP%' -DestinationPath '%CMAKE_INSTALL_DIR%'"
 if errorlevel 1 goto error
 
-:ninja_download
+:ninja_ask
+:: Ask user for Ninja installation
+echo I recommend you choosing Y if you haven't installed Ninja.
+choice /M "Do you want to download and install Ninja? (Y/N)"
+if errorlevel 2 goto path_add
+
+:: Define Ninja installation path (adjust as needed)
+set "NINJA_INSTALL_DIR=%INSTALL_DIR%\Ninja"
+
+:: Ninja Download URL (find the latest release from github.com/ninja-build/ninja/releases)
+set "NINJA_DOWNLOAD_URL=https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-win.zip"
+
+:: Temporary download location
+set "NINJA_ZIP=%TEMP%\ninja.zip"
+
 :: Download Ninja
 echo Downloading Ninja...
 curl -L -o "%NINJA_ZIP%" "%NINJA_DOWNLOAD_URL%"
@@ -63,28 +77,26 @@ powershell -Command "Expand-Archive -Path '%NINJA_ZIP%' -DestinationPath '%NINJA
 if errorlevel 1 goto error
 
 :path_add
-:: Add CMake and Ninja to PATH
-echo Adding CMake and Ninja to PATH...
-setx PATH "%PATH%;%CMAKE_INSTALL_DIR%\bin;%NINJA_INSTALL_DIR%" /M
+:: Add CMake and Ninja to USER PATH using .NET
+echo Adding CMake and Ninja to USER PATH...
+
+set "CMAKE_BIN_PATH=%CMAKE_INSTALL_DIR%\cmake-3.31.6-windows-x86_64\bin"
+set "NINJA_PATH=%NINJA_INSTALL_DIR%"
+
+powershell -Command ^
+    "$Path = [Environment]::GetEnvironmentVariable('PATH', 'User');" ^
+    "if ('%CMAKE_BIN_PATH%' -ne '') { if ($Path -notlike '*%CMAKE_BIN_PATH%*') { $Path += [IO.Path]::PathSeparator + '%CMAKE_BIN_PATH%'; }; };" ^
+    "if ('%NINJA_PATH%' -ne '') { if ($Path -notlike '*%NINJA_PATH%*') { $Path += [IO.Path]::PathSeparator + '%NINJA_PATH%'; }; };" ^
+    "[Environment]::SetEnvironmentVariable('PATH', $Path, 'User');"
+
 if errorlevel 1 goto error
 
 :: Clean up temporary files
 echo Cleaning up temporary files...
-del "%CMAKE_ZIP%"
-del "%NINJA_ZIP%"
+if exist "%CMAKE_ZIP%" del "%CMAKE_ZIP%"
+if exist "%NINJA_ZIP%" del "%NINJA_ZIP%"
 
-echo CMake and Ninja installation process completed.
-
-:: Run build.bat
-set "SOURCE_DIR=%~dp0"
-echo.
-echo Launching build process...
-start "Build Process" /D "%SOURCE_DIR%" cmd /c "build.bat"
-
-goto end
-
-:error
-echo Error occurred during installation.
+echo CMake and Ninja installation process completed, please run the build.bat to build the game.
 pause
 
 :end

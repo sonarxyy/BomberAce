@@ -2,11 +2,11 @@
 #define OPTIONS_MENU_HPP
 
 #include <SDL.h>
-#include <constants.hpp>
-#include <text_manager.hpp>
-#include <texture_manager.hpp>
-#include <audio_manager.hpp>
-#include <game_states_manager.hpp>
+#include "constants.hpp"
+#include "text_manager.hpp"
+#include "texture_manager.hpp"
+#include "audio_manager.hpp"
+#include "game_states_manager.hpp"
 
 class OptionsMenu {
 public:
@@ -30,11 +30,11 @@ private:
 	SDL_Texture* fullScreenTexture;
 	SDL_Rect fullScreenRect;
 
-	SDL_Texture* SFXTexture;
-	SDL_Rect SFXRect;
+	SDL_Texture* SFXVolumeTexture;
+	SDL_Rect SFXVolumeRect;
 
-	SDL_Texture* musicTexture;
-	SDL_Rect musicRect;
+	SDL_Texture* musicVolumeTexture;
+	SDL_Rect musicVolumeRect;
 };
 
 #endif

@@ -5,7 +5,10 @@ MainMenu::MainMenu(SDL_Renderer* renderer) : renderer(renderer), screenWidth(SCR
 	textureManager = new TextureManager(renderer);
 	audioManager = new AudioManager();
 	GameStateManager::setGameState(InMainMenu);
+	// Initialize animation variables
 	CreateDisplay();
+	animationTimer = 0;
+	animationSpeed = 3; // Adjust for animation speed
 }
 
 MainMenu::~MainMenu() {
@@ -18,32 +21,31 @@ void MainMenu::CreateDisplay() {
 	// Background
 	mainMenuBackground = textureManager->LoadTexture(MAINMENU_BACKGROUND);
 
-	font = textManager->LoadFont(FONT_FILE, 40);
 	// Game Title
+	font = textManager->LoadFont(XIROD_FONT_FILE, 40);
 	gameTitleTexture = textManager->CreateTextureFromText(font, "Shape Dominance", WHITE);
 	SDL_QueryTexture(gameTitleTexture, NULL, NULL, &gameTitleRect.w, &gameTitleRect.h);
-	gameTitleRect.x = (SCREEN_WIDTH - gameTitleRect.w) / 2;
-	gameTitleRect.y = SCREEN_HEIGHT * 2 / 4;
-
-	font = textManager->LoadFont(FONT_FILE, 20);
+	gameTitleRect.x = 20; // Left aligned (adjust as needed)
+	gameTitleRect.y = SCREEN_HEIGHT / 6;
 
 	// Start
+	font = textManager->LoadFont(XIROD_FONT_FILE, 20); // Resize font
 	startTexture = textManager->CreateTextureFromText(font, "Start Game", WHITE);
 	SDL_QueryTexture(startTexture, NULL, NULL, &startRect.w, &startRect.h);
-	startRect.x = (SCREEN_WIDTH - startRect.w) / 2;
-	startRect.y = SCREEN_HEIGHT * 3 / 4;
+	startRect.x = 20; // Left aligned
+	startRect.y = SCREEN_HEIGHT / 2; // Start position
 
 	// Options
 	optionsTexture = textManager->CreateTextureFromText(font, "Options", WHITE);
 	SDL_QueryTexture(optionsTexture, NULL, NULL, &optionsRect.w, &optionsRect.h);
-	optionsRect.x = (SCREEN_WIDTH - optionsRect.w) / 2;
-	optionsRect.y = startRect.y + startRect.h;
+	optionsRect.x = 20; // Left aligned
+	optionsRect.y = startRect.y + startRect.h + 5; // Spacing
 
 	// Quit
 	quitTexture = textManager->CreateTextureFromText(font, "Quit", WHITE);
 	SDL_QueryTexture(quitTexture, NULL, NULL, &quitRect.w, &quitRect.h);
-	quitRect.x = (SCREEN_WIDTH - quitRect.w) / 2;
-	quitRect.y = optionsRect.y + optionsRect.h;
+	quitRect.x = 20; // Left aligned
+	quitRect.y = optionsRect.y + optionsRect.h + 5; // Spacing
 
 	// Selector
 	selectorTexture = textureManager->LoadTexture(SELECTOR_TEXTURE_FILE);
@@ -56,6 +58,8 @@ void MainMenu::CreateDisplay() {
 	selectedOptionsTexture = textManager->CreateTextureFromText(font, "Options", YELLOW);
 	selectedQuitTexture = textManager->CreateTextureFromText(font, "Quit", YELLOW);
 }
+
+
 
 void MainMenu::HandleInput(SDL_Event& event) {
 	if (event.type == SDL_KEYDOWN) { // Check for keyboard event
@@ -99,7 +103,6 @@ void MainMenu::HandleInput(SDL_Event& event) {
 			}
 			break;
 		case SDLK_RETURN:
-			// TODO: Enter other UI when pressing Enter.
 			switch (selectedOption) {
 			case Start:
 				GameStateManager::setGameState(Playing);
@@ -127,9 +130,10 @@ void MainMenu::HandleInput(SDL_Event& event) {
 		SDL_Point mousePoint = { mouseX, mouseY }; // Create a point for the mouse
 
 		if (SDL_PointInRect(&mousePoint, &startRect)) {
-			if (selectedOption != Start) { // Check if the option changed
+			if (selectedOption != Start) {
 				selectedOption = Start;
 				audioManager->PlaySound(selectorSFX);
+				animationTimer = 0;
 			}
 			if (event.type == SDL_MOUSEBUTTONDOWN) {
 				GameStateManager::setGameState(Playing);
@@ -137,9 +141,10 @@ void MainMenu::HandleInput(SDL_Event& event) {
 			}
 		}
 		else if (SDL_PointInRect(&mousePoint, &optionsRect)) {
-			if (selectedOption != Options) { // Check if the option changed
+			if (selectedOption != Options) {
 				selectedOption = Options;
 				audioManager->PlaySound(selectorSFX);
+				animationTimer = 0;
 			}
 			if (event.type == SDL_MOUSEBUTTONDOWN) {
 				GameStateManager::setGameState(InOptionsMenu);
@@ -147,9 +152,10 @@ void MainMenu::HandleInput(SDL_Event& event) {
 			}
 		}
 		else if (SDL_PointInRect(&mousePoint, &quitRect)) {
-			if (selectedOption != Quit) { // Check if the option changed
+			if (selectedOption != Quit) {
 				selectedOption = Quit;
 				audioManager->PlaySound(selectorSFX);
+				animationTimer = 0;
 			}
 			if (event.type == SDL_MOUSEBUTTONDOWN) {
 				SDL_Event quitEvent;
@@ -214,27 +220,44 @@ void MainMenu::UpdateSelectorPosition() {
 		break;
 	}
 	selectorRect.x = selectedRect->x - selectorRect.w;
-	selectorRect.y = selectedRect->y;
+	selectorRect.y = selectedRect->y + selectedRect->h - selectorRect.h;
 }
 
 void MainMenu::Render() {
 	SDL_RenderCopy(renderer, mainMenuBackground, NULL, NULL);
 	SDL_RenderCopy(renderer, gameTitleTexture, NULL, &gameTitleRect);
+
+	int offset = sin(animationTimer / 15.0) * 2;
+	animationTimer += animationSpeed;
+
+	SDL_Rect animatedRect;
+
 	switch (selectedOption) {
 	case Start:
-		SDL_RenderCopy(renderer, selectedStartTexture, NULL, &startRect);
+		animatedRect = startRect;
+		animatedRect.y += offset;
+		SDL_RenderCopy(renderer, selectedStartTexture, NULL, &animatedRect);
+
 		SDL_RenderCopy(renderer, optionsTexture, NULL, &optionsRect);
 		SDL_RenderCopy(renderer, quitTexture, NULL, &quitRect);
 		break;
 	case Options:
 		SDL_RenderCopy(renderer, startTexture, NULL, &startRect);
-		SDL_RenderCopy(renderer, selectedOptionsTexture, NULL, &optionsRect);
+
+		animatedRect = optionsRect;
+		animatedRect.y += offset;
+		SDL_RenderCopy(renderer, selectedOptionsTexture, NULL, &animatedRect);
+
 		SDL_RenderCopy(renderer, quitTexture, NULL, &quitRect);
 		break;
 	case Quit:
 		SDL_RenderCopy(renderer, startTexture, NULL, &startRect);
 		SDL_RenderCopy(renderer, optionsTexture, NULL, &optionsRect);
-		SDL_RenderCopy(renderer, selectedQuitTexture, NULL, &quitRect);
+
+		animatedRect = quitRect;
+		animatedRect.y += offset;
+		SDL_RenderCopy(renderer, selectedQuitTexture, NULL, &animatedRect);
+
 		break;
 	default:
 		break;

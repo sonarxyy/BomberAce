@@ -1,4 +1,4 @@
-#include <game_object.hpp>
+#include "game_object.hpp"
 
 GameObject::GameObject(const char* path, SDL_Renderer* renderer, int x, int y) : textureManager(new TextureManager(renderer)) {
 	xPos = x;

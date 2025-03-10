@@ -31,6 +31,9 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
   - Halt BGM.
   - Pause, resume BGM.
   - Set BGM, SFX volume.
+- Game State Manager: Manage the states of the game.
+  - Set current state of the game.
+  - Get current state of the game.
 - Constants : Define constants for the game.
 
 
@@ -44,13 +47,14 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
 ```
 git clone https://github.com/sonarxyy/ShapeDominance.git
 ```
-2. Install and Build.
+2. Settings the environment and build.
 > [!IMPORTANT]
 > First of all, you need to ensure that C/C++ compiler is included in your environment variable.  
-> [!NOTE]
-> Từ lần sau, chỉ cần chạy build.bat để xây dựng trò chơi.
 
-Inside cloned directory, run install.bat as administrator.  
+> [!NOTE]
+> From second time and on, you just need to run build.bat to build the game.
+
+Inside cloned directory, run install.bat. After installation is done, run build.bat.  
 3. Open the game.  
 4. Enjoy.
 

@@ -2,8 +2,8 @@
 #define GAME_OBJECT_HPP
 
 #include <SDL.h>
-#include <constants.hpp>
-#include <texture_manager.hpp>
+#include "constants.hpp"
+#include "texture_manager.hpp"
 
 class GameObject {
 public:

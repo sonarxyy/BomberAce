@@ -26,13 +26,13 @@ bool Engine::Initialize(const char* title, int posX, int posY, int screenWidth, 
 	}
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-		// TODO: Handle Error
 		SDL_Log("Could not initialize SDL Subsystem");
 		isRunning = false;
 	}
 	else {
 		window = SDL_CreateWindow(title, posX, posY, screenWidth, screenHeight, fullscreenFlag);
-		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); // Render with supported GPU
+		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); // Render with supported GPU / Sync with refresh rate
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		isRunning = true;
 	}
@@ -45,8 +45,6 @@ bool Engine::Initialize(const char* title, int posX, int posY, int screenWidth, 
 	text = textMananger->CreateTextureFromText(textMananger->LoadFont(FONT_FILE, 10), "Test", ORANGE);
 	textureManager = new TextureManager(renderer);
 	audioManager = new AudioManager;
-	// music = audioManager->LoadMusic(MUSIC_FILE);
-	// audioManager->PlayMusic(music);
 	return isRunning;
 }
 
@@ -64,6 +62,7 @@ void Engine::Run() {
 		HandleEvents();
 		Update(deltaTime);
 		Render();
+		// SDL_Delay(16); // For better performance
 	}
 	Clean();
 }
