@@ -16,12 +16,9 @@ public:
     void CreateDisplay();
     void HandleInput(SDL_Event& event);
     void UpdateSelectorPosition();
-    void UpdateTransition();
     void Render();
 
-private:
-    int screenWidth, screenHeight;
-    
+private:    
     // For animation
     int animationTimer, animationSpeed;
     bool isAnimating;

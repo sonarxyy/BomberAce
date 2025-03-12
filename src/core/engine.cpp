@@ -1,18 +1,8 @@
-#include <engine.hpp>
+#include "engine.hpp"
 
-GameObject* playerObj;
-SDL_Texture* backgroundTxt;
-SDL_Texture* text;
-TextureManager* textureManager;
-TextManager* textMananger;
-AudioManager* audioManager;
-Mix_Music* music;
-MainMenu* mainMenu;
-OptionsMenu* optionsMenu;
-
-Engine::Engine() : isRunning(false), window(nullptr), renderer(nullptr), music(nullptr)
+Engine::Engine(const char* title, int posX, int posY, int screenWidth, int screenHeight, bool fullscreen) : isRunning(false), window(nullptr), renderer(nullptr), music(nullptr)
 {
-	// TODO: Init other things
+	Initialize(title, posX, posY, SCREEN_WIDTH, SCREEN_HEIGHT, fullscreen);
 }
 
 Engine::~Engine() {
@@ -38,13 +28,13 @@ bool Engine::Initialize(const char* title, int posX, int posY, int screenWidth, 
 	}
 
 	// Initialize
-	mainMenu = new MainMenu(renderer);
-	optionsMenu = new OptionsMenu(renderer);
-	playerObj = new GameObject(PLAYER_FILE, renderer, 0, 0);
 	textMananger = new TextManager(renderer);
-	text = textMananger->CreateTextureFromText(textMananger->LoadFont(FONT_FILE, 10), "Test", ORANGE);
 	textureManager = new TextureManager(renderer);
 	audioManager = new AudioManager;
+	mainMenu = new MainMenu(renderer);
+	optionsMenu = new OptionsMenu(renderer);
+	inGame = new InGame(renderer);
+	playerObj = new GameObject(PLAYER_FILE, renderer, 0, 0);
 	return isRunning;
 }
 
@@ -62,7 +52,6 @@ void Engine::Run() {
 		HandleEvents();
 		Update(deltaTime);
 		Render();
-		// SDL_Delay(16); // For better performance
 	}
 	Clean();
 }
@@ -81,6 +70,7 @@ void Engine::HandleEvents() {
 			optionsMenu->HandleInputs(event);
 			break;
 		case Playing:
+			inGame->HandleInputs(event);
 			break;
 		case Paused:
 			break;
@@ -91,7 +81,6 @@ void Engine::HandleEvents() {
 }
 
 void Engine::Update(float deltaTime) {
-	// TODO: Update everything
 	switch (GameStateManager::getGameState()) {
 	case InMainMenu:
 		mainMenu->UpdateSelectorPosition();
@@ -99,9 +88,10 @@ void Engine::Update(float deltaTime) {
 	case InOptionsMenu:
 		optionsMenu->Update();
 		break;
+	case Playing:
+		inGame->Update();
+		break;
 	}
-
-
 }
 
 void Engine::Render() {
@@ -116,10 +106,18 @@ void Engine::Render() {
 		optionsMenu->Render();
 		SDL_RenderPresent(renderer);
 		break;
+	case Playing:
+		SDL_RenderClear(renderer);
+		inGame->Render();
+		SDL_RenderPresent(renderer);
+		break;
 	}
 }
 
 void Engine::Clean() {
+	delete mainMenu;
+	delete optionsMenu;
+	delete inGame;
 	delete playerObj;
 	delete textureManager;
 	delete textMananger;

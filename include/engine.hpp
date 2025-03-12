@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include "in_game.hpp"
 #include "main_menu.hpp"
 #include "options_menu.hpp"
 #include "constants.hpp"
@@ -15,7 +16,7 @@
 
 class Engine {
 public:
-	Engine();
+	Engine(const char* title, int posX, int posY, int SCREEN_WIDTH, int SCREEN_HEIGHT, bool fullscreen);
 	~Engine();
 	bool Initialize(const char* title, int posX, int posY, int SCREEN_WIDTH, int SCREEN_HEIGHT, bool fullscreen);
 	void HandleEvents();
@@ -28,6 +29,16 @@ private:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	Mix_Music* music;
+
+	GameObject* playerObj;
+	SDL_Texture* backgroundTxt;
+	SDL_Texture* text;
+	TextureManager* textureManager;
+	TextManager* textMananger;
+	AudioManager* audioManager;
+	MainMenu* mainMenu;
+	OptionsMenu* optionsMenu;
+	InGame* inGame;
 
 	void Update(float deltaTime);
 	void Render();

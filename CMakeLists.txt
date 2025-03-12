@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project("ShapeDominance")
 
-add_executable("ShapeDominance" main.cpp)
+add_executable("ShapeDominance" ${CMAKE_SOURCE_DIR}/src/main.cpp)
 
 add_subdirectory(src/core)
 add_subdirectory(src/graphics)

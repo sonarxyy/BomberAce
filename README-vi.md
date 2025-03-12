@@ -37,11 +37,6 @@ Một dự án trò chơi nhỏ được viết bằng C++ dựa trên thư vi�
 - Constants : Định nghĩa hằng số cho trò chơi.
 
 
-# Thành phần của trò chơi
-- Menu chính.
-- Menu tùy chọn.
-
-
 # Xây dựng và cài đặt
 1. Clone repository của tôi.
 ```

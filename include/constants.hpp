@@ -23,16 +23,24 @@ const SDL_Color BLACK = { 0, 0, 0 };
 const SDL_Color GREEN = { 0, 128, 0 };
 
 // Path (using constexpr to avoid linker error)
+// Main Menu Path
 constexpr const char* FONT_FILE = "assets/font/font.ttf";
 constexpr const char* XIROD_FONT_FILE = "assets/font/xirod_font.ttf";
-constexpr const char* PLAYER_FILE = "assets/image/purple_body_circle.png";
-constexpr const char* BACKGROUND_FILE = "assets/image/backgroundDesert.png";
 constexpr const char* MUSIC_FILE = "assets/audio/music.mp3";
 constexpr const char* SELECTOR_SFX_FILE = "assets/audio/selector_sfx.ogg";
 constexpr const char* SELECTED_SFX_FILE = "assets/audio/selected_sfx.ogg";
 constexpr const char* SELECTOR_TEXTURE_FILE = "assets/image/selector.png";
 constexpr const char* MAINMENU_BACKGROUND = "assets/image/mainmenubackground.png";
 constexpr const char* MAINMENU_BOX = "assets/image/button_rectangle_depth_border.png";
+
+// Options Menu Path
 constexpr const char* OPTIONSMENU_BACKGROUND = "assets/image/optionsmenubackground.png";
+
+// In Game Path
+constexpr const char* PLAYER_FILE = "assets/image/purple_body_circle.png";
+constexpr const char* BACKGROUND_DESERT_FILE = "assets/image/backgroundColorDesert.png";
+constexpr const char* BACKGROUND_FALL_FILE = "assets/image/backgroundColorFall.png";
+constexpr const char* BACKGROUND_FOREST_FILE = "assets/image/backgroundColorForest.png";
+constexpr const char* BACKGROUND_GRASS_FILE = "assets/image/backgroundColorGrass.png";
 
 #endif

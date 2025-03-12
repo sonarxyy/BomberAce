@@ -37,11 +37,6 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
 - Constants : Define constants for the game.
 
 
-# Game Components
-- Main Menu.
-- Options Menu.
-
-
 # Build and Installation
 1. Clone my repository. 
 ```

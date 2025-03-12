@@ -9,8 +9,8 @@ class GameObject {
 public:
 	GameObject(const char* path, SDL_Renderer* renderer, int x, int y);
 	virtual ~GameObject(); // Generic destructor for any game object
-	void Update(float deltaTime);
-	void Render();
+	virtual void Update(float deltaTime);
+	virtual void Render();
 
 protected: // So that derived class can have access to
 	int xPos;
