@@ -7,6 +7,7 @@ enum GameState {
     Playing,
     Paused,
     GameOver,
+    Quitted
 };
 
 class GameStateManager {

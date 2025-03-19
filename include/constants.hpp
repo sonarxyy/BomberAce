@@ -7,8 +7,8 @@
 constexpr const char* title = "Shape Dominance";
 
 // Screen resolution
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 720;
+const int SCREEN_WIDTH = 960;
+const int SCREEN_HEIGHT = SCREEN_WIDTH;
 
 // Color
 const SDL_Color CYAN = { 0, 255, 255 };
@@ -22,7 +22,7 @@ const SDL_Color WHITE = { 255, 255, 255 };
 const SDL_Color BLACK = { 0, 0, 0 };
 const SDL_Color GREEN = { 0, 128, 0 };
 
-// Path (using constexpr to avoid linker error)
+// Path (using constexpr to avoid linker error)4
 // Main Menu Path
 constexpr const char* FONT_FILE = "assets/font/font.ttf";
 constexpr const char* XIROD_FONT_FILE = "assets/font/xirod_font.ttf";
@@ -42,5 +42,12 @@ constexpr const char* BACKGROUND_DESERT_FILE = "assets/image/backgroundColorDese
 constexpr const char* BACKGROUND_FALL_FILE = "assets/image/backgroundColorFall.png";
 constexpr const char* BACKGROUND_FOREST_FILE = "assets/image/backgroundColorForest.png";
 constexpr const char* BACKGROUND_GRASS_FILE = "assets/image/backgroundColorGrass.png";
+
+// Tile generation
+const int MAP_ROWS = 20;
+const int MAP_COLS = 20;
+const int TILE_SIZE = SCREEN_WIDTH / 20;
+
+
 
 #endif

@@ -23,7 +23,7 @@ void MainMenu::CreateDisplay() {
 
 	// Game Title
 	font = textManager->LoadFont(XIROD_FONT_FILE, 40);
-	gameTitleTexture = textManager->CreateTextureFromText(font, "Shape Dominance", WHITE);
+	gameTitleTexture = textManager->CreateTextureFromText(font, "Bomber Ace", WHITE);
 	SDL_QueryTexture(gameTitleTexture, NULL, NULL, &gameTitleRect.w, &gameTitleRect.h);
 	gameTitleRect.x = 20; // Left aligned (adjust as needed)
 	gameTitleRect.y = SCREEN_HEIGHT / 6;
@@ -113,6 +113,7 @@ void MainMenu::HandleInput(SDL_Event& event) {
 				audioManager->PlaySound(selectedSFX);
 				break;
 			case Quit:
+				GameStateManager::setGameState(Quitted);
 				SDL_Event quitEvent;
 				quitEvent.type = SDL_QUIT;
 				SDL_PushEvent(&quitEvent);
@@ -158,6 +159,7 @@ void MainMenu::HandleInput(SDL_Event& event) {
 				animationTimer = 0;
 			}
 			if (event.type == SDL_MOUSEBUTTONDOWN) {
+				GameStateManager::setGameState(Quitted);
 				SDL_Event quitEvent;
 				quitEvent.type = SDL_QUIT;
 				SDL_PushEvent(&quitEvent);
@@ -227,7 +229,7 @@ void MainMenu::Render() {
 	SDL_RenderCopy(renderer, mainMenuBackground, NULL, NULL);
 	SDL_RenderCopy(renderer, gameTitleTexture, NULL, &gameTitleRect);
 
-	double offset = sin(animationTimer / 15.0) * 2;
+	int offset = sin(animationTimer / 15.0) * 2;
 	animationTimer += animationSpeed;
 
 	SDL_Rect animatedRect;

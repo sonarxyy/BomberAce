@@ -23,7 +23,6 @@ bool Engine::Initialize(const char* title, int posX, int posY, int screenWidth, 
 		window = SDL_CreateWindow(title, posX, posY, screenWidth, screenHeight, fullscreenFlag);
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); // Render with supported GPU / Sync with refresh rate
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		isRunning = true;
 	}
 
@@ -34,7 +33,7 @@ bool Engine::Initialize(const char* title, int posX, int posY, int screenWidth, 
 	mainMenu = new MainMenu(renderer);
 	optionsMenu = new OptionsMenu(renderer);
 	inGame = new InGame(renderer);
-	playerObj = new GameObject(PLAYER_FILE, renderer, 0, 0);
+	tileManager = new TileManager(renderer);
 	return isRunning;
 }
 
@@ -48,7 +47,6 @@ void Engine::Run() {
 		Uint32 currentFrameTime = SDL_GetTicks();
 		float deltaTime = (currentFrameTime - lastFrameTime) / 1000.0f;
 		lastFrameTime = currentFrameTime;
-
 		HandleEvents();
 		Update(deltaTime);
 		Render();
@@ -91,6 +89,9 @@ void Engine::Update(float deltaTime) {
 	case Playing:
 		inGame->Update();
 		break;
+	case Quitted:
+		isRunning = false;
+		break;
 	}
 }
 
@@ -108,6 +109,7 @@ void Engine::Render() {
 		break;
 	case Playing:
 		SDL_RenderClear(renderer);
+		tileManager->Render(renderer);
 		inGame->Render();
 		SDL_RenderPresent(renderer);
 		break;
@@ -118,7 +120,6 @@ void Engine::Clean() {
 	delete mainMenu;
 	delete optionsMenu;
 	delete inGame;
-	delete playerObj;
 	delete textureManager;
 	delete textMananger;
 	delete audioManager;

@@ -4,8 +4,7 @@ InGame::InGame(SDL_Renderer* renderer) : renderer(renderer) {
     textManager = new TextManager(renderer);
     textureManager = new TextureManager(renderer);
     audioManager = new AudioManager();
-    backgroundDesertX = 0;
-    CreateDisplay();
+    tileManager = new TileManager(renderer);
 }
 
 InGame::~InGame() {
@@ -14,30 +13,33 @@ InGame::~InGame() {
     delete audioManager;
 }
 
-void InGame::CreateDisplay() {
-    backgroundDesert = textureManager->LoadTexture(BACKGROUND_DESERT_FILE);
-    SDL_QueryTexture(backgroundDesert, NULL, NULL, &backgroundDesertWidth, &backgroundDesertHeight);
-
-    // Render the background twice to create an infinite scrolling effect.
-    backgroundDesertDestRect1 = { backgroundDesertX, 0, backgroundDesertWidth, backgroundDesertHeight };
-    backgroundDesertDestRect2 = { backgroundDesertX + backgroundDesertWidth, 0, backgroundDesertWidth, backgroundDesertHeight };
-}
-
 void InGame::HandleInputs(SDL_Event& event) {
-
+    player.HandleInput(event);
+    // Handle input events here (e.g., keyboard input).
 }
 
 void InGame::Update() {
-    // Scroll the background to the left.
-    backgroundDesertX -= 50; // Adjust the scrolling speed as needed.
-
-    // If the background has scrolled off the screen, reset its position.
-    if (backgroundDesertX < -backgroundDesertWidth) {
-        backgroundDesertX = 0;
+    /*for (auto& enemy : enemies) {
+        enemy.Update(*tileManager, player, bombs);
     }
+
+    for (auto& bomb : bombs) {
+        bomb.Update(*tileManager);
+    }
+
+    bombs.erase(std::remove_if(bombs.begin(), bombs.end(), [](Bomb& b) { return b.IsExploded(); }), bombs.end());
+    enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](Enemy& e) { return !e.IsAlive(); }), enemies.end());*/
 }
 
 void InGame::Render() {
-    SDL_RenderCopy(renderer, backgroundDesert, NULL, &backgroundDesertDestRect1);
-    SDL_RenderCopy(renderer, backgroundDesert, NULL, &backgroundDesertDestRect2);
+    tileManager->Render(renderer);
+    player.Render(renderer); // Render player
+
+    //for (auto& enemy : enemies) {
+    //    enemy.Render(renderer); // Render enemies
+    //}
+
+    //for (auto& bomb : bombs) {
+    //    bomb.Render(renderer); // Render bombs
+    //}
 }

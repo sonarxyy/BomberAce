@@ -1,6 +1,7 @@
 #ifndef ENGINE_HPP
 #define ENGINE_HPP
 
+#include <vector>
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include "in_game.hpp"
@@ -11,8 +12,7 @@
 #include "texture_manager.hpp"
 #include "audio_manager.hpp"
 #include "game_states_manager.hpp"
-#include "game_object.hpp"
-#include "vector.hpp"
+
 
 class Engine {
 public:
@@ -29,8 +29,6 @@ private:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	Mix_Music* music;
-
-	GameObject* playerObj;
 	SDL_Texture* backgroundTxt;
 	SDL_Texture* text;
 	TextureManager* textureManager;
@@ -39,6 +37,8 @@ private:
 	MainMenu* mainMenu;
 	OptionsMenu* optionsMenu;
 	InGame* inGame;
+	TileManager* tileManager;
+	Player player;
 
 	void Update(float deltaTime);
 	void Render();
