@@ -15,7 +15,7 @@ OptionsMenu::~OptionsMenu() {
 }
 
 void OptionsMenu::CreateDisplay() {
-    font = textManager->LoadFont(FONT_FILE, 20);
+    font = textManager->LoadFont(OPEN_SANS_FONT_FILE, 20);
     optionsMenuBackground = textureManager->LoadTexture(OPTIONSMENU_BACKGROUND);
 
     // Full Screen Texture

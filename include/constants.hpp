@@ -22,9 +22,9 @@ const SDL_Color WHITE = { 255, 255, 255 };
 const SDL_Color BLACK = { 0, 0, 0 };
 const SDL_Color GREEN = { 0, 128, 0 };
 
-// Path (using constexpr to avoid linker error)4
+// Path (using constexpr to avoid linker error)
 // Main Menu Path
-constexpr const char* FONT_FILE = "assets/font/font.ttf";
+constexpr const char* OPEN_SANS_FONT_FILE = "assets/font/open_sans_font.ttf";
 constexpr const char* XIROD_FONT_FILE = "assets/font/xirod_font.ttf";
 constexpr const char* MUSIC_FILE = "assets/audio/music.mp3";
 constexpr const char* SELECTOR_SFX_FILE = "assets/audio/selector_sfx.ogg";
@@ -48,6 +48,7 @@ const int MAP_ROWS = 20;
 const int MAP_COLS = 20;
 const int TILE_SIZE = SCREEN_WIDTH / 20;
 
-
+// For animation
+const int FRAME = 30;
 
 #endif

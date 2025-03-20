@@ -27,8 +27,8 @@ TTF_Font* TextManager::LoadFont(const char* fontPath, int fontSize) {
     return font;
 }
 
-SDL_Texture* TextManager::CreateTextureFromText(TTF_Font* font, const char* text, SDL_Color color) {
-    SDL_Surface* surface = TTF_RenderText_Blended(font, text, color);
+SDL_Texture* TextManager::CreateTextureFromText(TTF_Font* font, std::string text, SDL_Color color) {
+    SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), color);
     if (surface == nullptr) {
         SDL_Log("Failed to create surface from text: %s", TTF_GetError());
         return nullptr;

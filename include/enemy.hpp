@@ -7,10 +7,14 @@
 #include "bomb.hpp"
 #include <vector>
 
+class Bomb;
+class Player;
+
 class Enemy {
 public:
     Enemy(int startX, int startY);
-    void Update(TileManager& map, Player& player, std::vector<Bomb>& bombs);
+    void Update(TileManager& map, Player& player, std::vector<Bomb>& bombs, SDL_Renderer* renderer);
+    void PlaceBomb(std::vector<Bomb>& bombs, SDL_Renderer* renderer);
     void Render(SDL_Renderer* renderer);
     void Kill();
     bool IsAlive() const { return alive; }
@@ -23,6 +27,7 @@ private:
     bool alive;
     int direction; // 0 = UP, 1 = DOWN, 2 = LEFT, 3 = RIGHT
     int moveTimer; // Change direction every few frames
+    int bombCooldown;
 
     void ChooseDirection(TileManager& map, Player& player, std::vector<Bomb>& bombs);
 };

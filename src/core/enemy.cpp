@@ -5,15 +5,16 @@
 Enemy::Enemy(int startX, int startY) {
     x = startX;
     y = startY;
-    speed = 2;
-    width = 32;
-    height = 32;
+    speed = 24;
+    width = TILE_SIZE;
+    height = TILE_SIZE;
     alive = true;
     direction = rand() % 4; // Random initial direction
-    moveTimer = 60; // Change direction every 60 frames
+    moveTimer = 300; // Change direction every 150 frames
+    bombCooldown = 0;
 }
 
-void Enemy::Update(TileManager& map, Player& player, std::vector<Bomb>& bombs) {
+void Enemy::Update(TileManager& map, Player& player, std::vector<Bomb>& bombs, SDL_Renderer* renderer) {
     if (!alive) return;
 
     ChooseDirection(map, player, bombs);
@@ -33,7 +34,16 @@ void Enemy::Update(TileManager& map, Player& player, std::vector<Bomb>& bombs) {
     }
 
     if (--moveTimer <= 0) {
-        moveTimer = 60;
+        moveTimer = 300;
+    }
+
+    // Handle bomb placement
+    if (bombCooldown > 0) {
+        bombCooldown--;  // Reduce cooldown timer
+    }
+    else if (rand() % 100 < 2) {  // 2% chance to place bomb each frame
+        PlaceBomb(bombs, renderer);
+        bombCooldown = 300;  // Reset cooldown (e.g., 5 seconds)
     }
 }
 
@@ -69,11 +79,26 @@ void Enemy::ChooseDirection(TileManager& map, Player& player, std::vector<Bomb>&
     }
 }
 
+void Enemy::PlaceBomb(std::vector<Bomb>& bombs, SDL_Renderer* renderer) {
+    int bombX = (x / TILE_SIZE) * TILE_SIZE;
+    int bombY = (y / TILE_SIZE) * TILE_SIZE;
+
+    // Ensure no bomb already exists at this location
+    for (const auto& bomb : bombs) {
+        if (bomb.GetRect().x == bombX && bomb.GetRect().y == bombY) {
+            return; // Don't place bomb if one already exists
+        }
+    }
+
+    // Place a new bomb
+    bombs.push_back(Bomb(bombX, bombY));
+}
+
 void Enemy::Render(SDL_Renderer* renderer) {
     if (!alive) return;
 
     SDL_Rect rect = { x, y, width, height };
-    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+    SDL_SetRenderDrawColor(renderer, RED.r, RED.g, RED.b, 255);
     SDL_RenderFillRect(renderer, &rect);
 }
 

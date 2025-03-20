@@ -2,6 +2,7 @@
 #define IN_GAME_HPP
 
 #include <SDL.h>
+#include <algorithm>
 #include "constants.hpp"
 #include "game_states_manager.hpp"
 #include "texture_manager.hpp"
@@ -11,6 +12,8 @@
 #include "player.hpp"
 #include "bomb.hpp"
 #include "enemy.hpp"
+#include "explosion.hpp"
+#include "hud.hpp"
 
 class InGame {
 public:
@@ -30,6 +33,13 @@ private:
 	Player player;
 	std::vector<Bomb> bombs;
 	std::vector<Enemy> enemies;
+	std::vector<Explosion> explosions;
+	HUD* hud;
+
+	int level;
+	int score;
+	Uint32 startTime;
+	Uint32 levelDuration;
 };
 
 #endif

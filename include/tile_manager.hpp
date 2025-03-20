@@ -3,10 +3,12 @@
 
 #include <cstdlib>
 #include <ctime>
-#include "constants.hpp"
-#include <vector>
-#include "texture_manager.hpp"
 #include <SDL.h>
+#include <vector>
+#include <string>
+#include "constants.hpp"
+#include "texture_manager.hpp"
+
 
 class TileManager {
 public:
@@ -14,6 +16,7 @@ public:
     void LoadTexture();
     void Render(SDL_Renderer* renderer);
     bool CheckCollision(SDL_Rect& playerRect) const;
+    bool isWall(int col, int row) const;
     bool DestroyTile(int col, int row);
     bool getRenderState() const;
 
@@ -27,7 +30,6 @@ private:
     std::vector<SDL_Texture*> floorTextures;
     std::vector<SDL_Texture*> breakableTextures;
     std::vector<SDL_Texture*> unbreakableTextures;
-
 };
 
 

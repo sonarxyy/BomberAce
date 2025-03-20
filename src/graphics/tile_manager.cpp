@@ -19,7 +19,7 @@ TileManager::TileManager(SDL_Renderer* renderer) : renderer(renderer) {
     {1, 0, 1, 1, 0, 1, 1, 1, 2, 0, 0, 2, 1, 1, 0, 1, 1, 1, 0, 1},
     {1, 0, 0, 2, 0, 0, 0, 2, 0, 2, 2, 0, 0, 2, 0, 0, 0, 2, 0, 1},
     {1, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 2, 2, 0, 0, 2, 0, 0, 0, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1, 0, 2, 2, 0, 1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 1, 0, 2, 1, 2, 0, 1, 0, 2, 2, 0, 1, 0, 0, 0, 0, 2, 1, 1},
     {1, 0, 0, 2, 0, 0, 0, 2, 2, 0, 2, 0, 0, 2, 0, 0, 0, 2, 0, 1},
     {1, 0, 2, 0, 0, 2, 0, 0, 0, 2, 0, 2, 2, 0, 0, 2, 0, 0, 0, 1},
     {1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 2, 0, 1, 1, 0, 1, 1, 1, 0, 1},
@@ -49,7 +49,7 @@ TileManager::TileManager(SDL_Renderer* renderer) : renderer(renderer) {
 
 void TileManager::LoadTexture() {
     floorTextures.push_back(textureManager->LoadTexture("assets/image/floor1.png"));
-    floorTextures.push_back(textureManager->LoadTexture("assets/image/floor2.png"));
+    // floorTextures.push_back(textureManager->LoadTexture("assets/image/floor2.png"));
     floorTextures.push_back(textureManager->LoadTexture("assets/image/floor3.png"));
 
     unbreakableTextures.push_back(textureManager->LoadTexture("assets/image/unbreakableObject.png"));
@@ -93,6 +93,13 @@ bool TileManager::CheckCollision(SDL_Rect& playerRect) const {
     return false;
 }
 
+bool TileManager::isWall(int col, int row) const {
+    if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) { // Treat out-of-bounds as walls
+        return true;
+    }
+    return map[row][col] == 1;
+}
+
 bool TileManager::DestroyTile(int col, int row) {
     if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) return true;
 
@@ -107,3 +114,4 @@ bool TileManager::DestroyTile(int col, int row) {
 bool TileManager::getRenderState() const {
     return isRendered;
 }
+

@@ -5,6 +5,7 @@
 #include <SDL_ttf.h>
 #include <vector>
 #include <map>
+#include <string>
 
 class TextManager {
 public:
@@ -12,7 +13,7 @@ public:
     ~TextManager();
 
     TTF_Font* LoadFont(const char* fontPath, int fontSize);
-    SDL_Texture* CreateTextureFromText(TTF_Font* font, const char* text, SDL_Color color);
+    SDL_Texture* CreateTextureFromText(TTF_Font* font, std::string text, SDL_Color color);
     void UnloadFont(TTF_Font* font);
     void UnloadTexture(SDL_Texture* texture);
     void Clean(); // Unload all fonts and textures

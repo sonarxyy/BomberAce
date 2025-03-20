@@ -1,5 +1,5 @@
 #include "bomb.hpp"
-
+#include <iostream>
 
 Bomb::Bomb(int px, int py) {
     x = (px / TILE_SIZE) * TILE_SIZE; // Align to grid
@@ -9,32 +9,106 @@ Bomb::Bomb(int px, int py) {
     active = true;
 }
 
-void Bomb::Update(TileManager& map) {
+void Bomb::Update(TileManager& map, Player& player, std::vector<Enemy>& enemies, std::vector<Explosion>& explosions, SDL_Renderer* renderer) {
     if (!active) return;
 
     Uint32 currentTime = SDL_GetTicks();
     if (currentTime - startTime >= timer) {
         active = false;
-        Explode(map);
+        Explode(map, player, enemies, explosions, renderer);
     }
 }
 
-void Bomb::Explode(TileManager& map) {
-    // Convert position to grid coordinates
+void Bomb::Explode(TileManager& map, Player& player, std::vector<Enemy>& enemies, std::vector<Explosion>& explosions, SDL_Renderer* renderer) {
     int gridX = x / TILE_SIZE;
     int gridY = y / TILE_SIZE;
+    int explosionRange = 1;
 
-    // Destroy obstacles in explosion range (cross pattern)
-    int explosionRange = 2; // Default explosion radius
+    // Create explosion center
+    explosions.push_back(Explosion(x, y, renderer));
 
-    for (int i = -explosionRange; i <= explosionRange; i++) {
-        // Horizontal explosion
-        if (map.DestroyTile(gridX + i, gridY)) break;
+    // Check collision at explosion center
+    SDL_Rect explosionRect = { x, y, TILE_SIZE, TILE_SIZE };
+
+    if (CheckCollision(explosionRect, player.GetRect())) {
+        player.TakeDamage();
     }
 
-    for (int i = -explosionRange; i <= explosionRange; i++) {
-        // Vertical explosion
-        if (map.DestroyTile(gridX, gridY + i)) break;
+    for (auto& enemy : enemies) {
+        if (CheckCollision(explosionRect, enemy.GetRect())) {
+            enemy.Kill();
+        }
+    }
+
+    // Create explosion in 4 directions
+    for (int i = 1; i <= explosionRange; i++) {
+        if (!map.DestroyTile(gridX + i, gridY)) {
+            int ex = (gridX + i) * TILE_SIZE;
+            int ey = gridY * TILE_SIZE;
+            explosions.push_back(Explosion(ex, ey, renderer));
+            explosionRect = { ex, ey, TILE_SIZE, TILE_SIZE };
+
+            if (CheckCollision(explosionRect, player.GetRect())) {
+                player.TakeDamage();
+            }
+
+            for (auto& enemy : enemies) {
+                if (CheckCollision(explosionRect, enemy.GetRect())) {
+                    enemy.Kill();
+                }
+            }
+        }
+
+        if (!map.DestroyTile(gridX - i, gridY)) {
+            int ex = (gridX - i) * TILE_SIZE;
+            int ey = gridY * TILE_SIZE;
+            explosions.push_back(Explosion(ex, ey, renderer));
+            explosionRect = { ex, ey, TILE_SIZE, TILE_SIZE };
+
+            if (CheckCollision(explosionRect, player.GetRect())) {
+                player.TakeDamage();
+            }
+
+            for (auto& enemy : enemies) {
+                if (CheckCollision(explosionRect, enemy.GetRect())) {
+                    enemy.Kill();
+                }
+            }
+        }
+
+        if (!map.DestroyTile(gridX, gridY + i)) {
+            int ex = gridX * TILE_SIZE;
+            int ey = (gridY + i) * TILE_SIZE;
+            explosions.push_back(Explosion(ex, ey, renderer));
+            explosionRect = { ex, ey, TILE_SIZE, TILE_SIZE };
+
+            if (CheckCollision(explosionRect, player.GetRect())) {
+                player.TakeDamage();
+            }
+
+            for (auto& enemy : enemies) {
+                if (CheckCollision(explosionRect, enemy.GetRect())) {
+                    enemy.Kill();
+                }
+            }
+        }
+
+        if (!map.DestroyTile(gridX, gridY - i)) {
+            int ex = gridX * TILE_SIZE;
+            int ey = (gridY - i) * TILE_SIZE;
+            explosions.push_back(Explosion(ex, ey, renderer));
+            explosionRect = { ex, ey, TILE_SIZE, TILE_SIZE };
+
+            if (CheckCollision(explosionRect, player.GetRect())) {
+                player.TakeDamage();
+            }
+
+            for (auto& enemy : enemies) {
+                if (CheckCollision(explosionRect, enemy.GetRect())) {
+                    enemy.Kill();
+                }
+            }
+        }
     }
 }
 
@@ -48,4 +122,8 @@ void Bomb::Render(SDL_Renderer* renderer) {
 
 SDL_Rect Bomb::GetRect() const {
     return { x, y };
+}
+
+bool Bomb::CheckCollision(SDL_Rect explosionArea, SDL_Rect object) {
+    return SDL_HasIntersection(&explosionArea, &object);
 }
