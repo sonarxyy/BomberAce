@@ -1,6 +1,6 @@
 #include "engine.hpp"
 
-Engine::Engine(const char* title, int posX, int posY, int screenWidth, int screenHeight, bool fullscreen) : isRunning(false), window(nullptr), renderer(nullptr), music(nullptr)
+Engine::Engine(const char* title, int posX, int posY, int screenWidth, int screenHeight, bool fullscreen) : window(nullptr), renderer(nullptr), music(nullptr), player(renderer), isRunning(false)
 {
 	Initialize(title, posX, posY, SCREEN_WIDTH, SCREEN_HEIGHT, fullscreen);
 }
@@ -37,8 +37,12 @@ bool Engine::Initialize(const char* title, int posX, int posY, int screenWidth, 
 	return isRunning;
 }
 
-bool Engine::getRunningState() const {
+bool Engine::GetRunningState() const {
 	return isRunning;
+}
+
+void Engine::SetRunningState(bool isRunning) {
+	Engine::isRunning = isRunning;
 }
 
 void Engine::Run() {
@@ -51,7 +55,6 @@ void Engine::Run() {
 		Update(deltaTime);
 		Render();
 	}
-	Clean();
 }
 
 void Engine::HandleEvents() {
@@ -68,7 +71,8 @@ void Engine::HandleEvents() {
 			optionsMenu->HandleInputs(event);
 			break;
 		case Playing:
-			inGame->HandleInputs(event);
+			keyState = SDL_GetKeyboardState(NULL); // For correct animation based on input for Player
+			inGame->HandleInputs(keyState);
 			break;
 		case Paused:
 			break;
@@ -79,7 +83,14 @@ void Engine::HandleEvents() {
 }
 
 void Engine::Update(float deltaTime) {
-	switch (GameStateManager::getGameState()) {
+	static GameState previousState = GameStateManager::getGameState();
+	GameState currentState = GameStateManager::getGameState();
+
+	if (previousState != currentState) {
+		FadeTransition::fade(renderer, false); // Fade out before switching state
+	}
+
+	switch (currentState) {
 	case InMainMenu:
 		mainMenu->UpdateSelectorPosition();
 		break;
@@ -92,6 +103,11 @@ void Engine::Update(float deltaTime) {
 	case Quitted:
 		isRunning = false;
 		break;
+	}
+
+	if (previousState != currentState) {
+		FadeTransition::fade(renderer, false); // Fade in after switching state
+		previousState = currentState; // Update stored state
 	}
 }
 

@@ -2,22 +2,26 @@
 #include <cstdlib>  // For random movement
 #include <cmath>    // For distance calculations
 
-Enemy::Enemy(int startX, int startY) {
+Enemy::Enemy(int startX, int startY, SDL_Renderer* renderer) : renderer(renderer) {
     x = startX;
     y = startY;
-    speed = 24;
+    speed = TILE_SIZE / 8;
     width = TILE_SIZE;
     height = TILE_SIZE;
     alive = true;
     direction = rand() % 4; // Random initial direction
-    moveTimer = 300; // Change direction every 150 frames
+    moveTimer = 120; // Change direction every 120 frames
     bombCooldown = 0;
+    lastRetryTime = 0;
 }
 
-void Enemy::Update(TileManager& map, Player& player, std::vector<Bomb>& bombs, SDL_Renderer* renderer) {
+void Enemy::Update(TileManager& map, std::vector<Bomb>& bombs, SDL_Renderer* renderer) {
     if (!alive) return;
 
-    ChooseDirection(map, player, bombs);
+    // Always check if in a bomb's explosion radius
+    if (IsInBombRadius(x, y, bombs)) {
+        EscapeFromBomb(map, bombs);
+    }
 
     int newX = x, newY = y;
     switch (direction) {
@@ -32,54 +36,46 @@ void Enemy::Update(TileManager& map, Player& player, std::vector<Bomb>& bombs, S
         x = newX;
         y = newY;
     }
+    else {
+        // If movement fails, retry after 1000ms
+        if (SDL_GetTicks() - lastRetryTime > 1000) {
+            direction = rand() % 4;
+            lastRetryTime = SDL_GetTicks();
+        }
+    }
 
     if (--moveTimer <= 0) {
-        moveTimer = 300;
+        moveTimer = 120;
     }
 
     // Handle bomb placement
     if (bombCooldown > 0) {
-        bombCooldown--;  // Reduce cooldown timer
+        bombCooldown--;
     }
-    else if (rand() % 100 < 2) {  // 2% chance to place bomb each frame
-        PlaceBomb(bombs, renderer);
-        bombCooldown = 300;  // Reset cooldown (e.g., 5 seconds)
+    else if (rand() % 100 < 10) {
+        PlaceBomb(bombs, renderer, map);
+        bombCooldown = 300;
     }
 }
 
-void Enemy::ChooseDirection(TileManager& map, Player& player, std::vector<Bomb>& bombs) {
-    // Avoid bombs
-    for (const auto& bomb : bombs) {
-        SDL_Rect bombRect = { bomb.GetRect().x, bomb.GetRect().y, TILE_SIZE, TILE_SIZE};
-        SDL_Rect enemyRect = GetRect();
-
-        if (SDL_HasIntersection(&bombRect, &enemyRect)) {
-            direction = rand() % 4; // Pick a random direction to escape
-            return;
-        }
+void Enemy::ChooseDirection(TileManager& map, std::vector<Bomb>& bombs) {
+    if (IsInBombRadius(x, y, bombs)) {
+        EscapeFromBomb(map, bombs);
+        return;
     }
 
-    // Chase player if in range
-    int playerX = player.GetRect().x;
-    int playerY = player.GetRect().y;
-
-    int distX = abs(playerX - x);
-    int distY = abs(playerY - y);
-
-    if (distX <= 128 && distY <= 128) {  // Chase if within range
-        if (distX > distY) {
-            direction = (playerX > x) ? 3 : 2; // Move right or left
-        }
-        else {
-            direction = (playerY > y) ? 1 : 0; // Move down or up
-        }
+    // Move randomly but ensure moving at least 2 tiles in one direction
+    static int moveCounter = 0;
+    if (moveCounter < 2) {
+        moveCounter++;
     }
     else {
-        direction = rand() % 4; // Random movement if player is not close
+        direction = rand() % 4;
+        moveCounter = 0;
     }
 }
 
-void Enemy::PlaceBomb(std::vector<Bomb>& bombs, SDL_Renderer* renderer) {
+void Enemy::PlaceBomb(std::vector<Bomb>& bombs, SDL_Renderer* renderer, TileManager& map) {
     int bombX = (x / TILE_SIZE) * TILE_SIZE;
     int bombY = (y / TILE_SIZE) * TILE_SIZE;
 
@@ -90,8 +86,32 @@ void Enemy::PlaceBomb(std::vector<Bomb>& bombs, SDL_Renderer* renderer) {
         }
     }
 
-    // Place a new bomb
-    bombs.push_back(Bomb(bombX, bombY));
+    bool nearBreakable = false;
+    bool onFloorTile = (map.GetTileTypeAt(bombX, bombY) == TileManager::TileType::GRASS || map.GetTileTypeAt(bombX, bombY) == TileManager::TileType::SNOW);
+
+    // Check adjacent tiles for breakable walls
+    for (int i = 0; i < 4; i++) {
+        int checkX = bombX / TILE_SIZE;
+        int checkY = bombX / TILE_SIZE;
+
+        switch (i) {
+            case 0: checkY -= 1; break; // UP
+            case 1: checkY += 1; break; // DOWN
+            case 2: checkX -= 1; break; // LEFT
+            case 3: checkX += 1; break; // RIGHT
+        }
+
+        TileManager::TileType tileType = map.GetTileTypeAt(checkX * TILE_SIZE, checkY * TILE_SIZE);
+
+        if (tileType == TileManager::TileType::BREAKABLE) {
+            nearBreakable = true;
+            break;
+        }
+    }
+
+    if ((nearBreakable && (rand() % 100 < 60)) || (onFloorTile && (rand() % 100 < 30))) {
+        bombs.push_back(Bomb(bombX, bombY, renderer));
+    }
 }
 
 void Enemy::Render(SDL_Renderer* renderer) {
@@ -108,4 +128,57 @@ void Enemy::Kill() {
 
 SDL_Rect Enemy::GetRect() const {
     return { x, y, width, height };
+}
+
+bool Enemy::IsInBombRadius(int x, int y, std::vector<Bomb>& bombs) {
+    for (const auto& bomb : bombs) {
+        int bombX = bomb.GetRect().x / TILE_SIZE;
+        int bombY = bomb.GetRect().y / TILE_SIZE;
+        int radius = bomb.GetExplosionRadius();
+
+        int enemyX = x / TILE_SIZE;
+        int enemyY = y / TILE_SIZE;
+
+        // Bomb explodes in 4 directions
+        if (enemyX == bombX && abs(enemyY - bombY) <= radius) {
+            return true; // In vertical explosion path
+        }
+        if (enemyY == bombY && abs(enemyX - bombX) <= radius) {
+            return true; // In horizontal explosion path
+        }
+    }
+    return false;
+}
+
+void Enemy::EscapeFromBomb(TileManager& map, std::vector<Bomb>& bombs) {
+    Uint32 currentTime = SDL_GetTicks();
+    if (currentTime - lastRetryTime < 400) {
+        return; // Try to escapse
+    }
+    lastRetryTime = currentTime;
+
+    std::vector<int> safeDirections;
+
+    for (int i = 0; i < 4; i++) {
+        int newX = x, newY = y;
+        switch (i) {
+        case 0: newY -= TILE_SIZE; break; // UP
+        case 1: newY += TILE_SIZE; break; // DOWN
+        case 2: newX -= TILE_SIZE; break; // LEFT
+        case 3: newX += TILE_SIZE; break; // RIGHT
+        }
+
+        SDL_Rect newRect = { newX, newY, width, height };
+        if (!map.CheckCollision(newRect) && !IsInBombRadius(newX, newY, bombs)) {
+            safeDirections.push_back(i); // Store safe movement options
+        }
+    }
+
+    if (!safeDirections.empty()) {
+        direction = safeDirections[rand() % safeDirections.size()]; // Pick a random safe direction
+    }
+    else {
+        // If trapped, keep retrying
+        direction = rand() % 4;
+    }
 }

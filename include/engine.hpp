@@ -12,7 +12,9 @@
 #include "texture_manager.hpp"
 #include "audio_manager.hpp"
 #include "game_states_manager.hpp"
+#include "fade_transition.hpp"
 
+class Player;
 
 class Engine {
 public:
@@ -22,7 +24,8 @@ public:
 	void HandleEvents();
 	void Run();
 	void Clean();
-	bool getRunningState() const;
+	bool GetRunningState() const;
+	void SetRunningState(bool isRunning);
 
 private:
 	bool isRunning;
@@ -39,6 +42,8 @@ private:
 	InGame* inGame;
 	TileManager* tileManager;
 	Player player;
+
+	const Uint8* keyState;
 
 	void Update(float deltaTime);
 	void Render();

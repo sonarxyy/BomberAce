@@ -93,7 +93,7 @@ bool TileManager::CheckCollision(SDL_Rect& playerRect) const {
     return false;
 }
 
-bool TileManager::isWall(int col, int row) const {
+bool TileManager::IsWall(int col, int row) const {
     if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) { // Treat out-of-bounds as walls
         return true;
     }
@@ -111,7 +111,32 @@ bool TileManager::DestroyTile(int col, int row) {
     return (map[row][col] == 1); // Stop explosion at walls
 }
 
-bool TileManager::getRenderState() const {
+bool TileManager::GetRenderState() const {
     return isRendered;
 }
+
+TileManager::TileType TileManager::GetTileTypeAt(int x, int y) {
+    int tileX = x / TILE_SIZE;
+    int tileY = y / TILE_SIZE;
+
+    if (tileX < 0 || tileX >= MAP_COLS || tileY < 0 || tileY >= MAP_ROWS) {
+        return TileType::WALL; // Treat out-of-bounds as walls
+    }
+
+    if (map[tileY][tileX] == 1) {
+        return TileType::WALL; // Unbreakable wall
+    }
+
+    if (map[tileY][tileX] == 2) {
+        return TileType::BREAKABLE; // Breakable wall
+    }
+
+    // Use floorTextureIndex to determine GRASS or SNOW
+    switch (floorTextureIndex[tileY][tileX]) {
+    case 0: return TileType::GRASS;
+    case 1: return TileType::SNOW;
+    default: return TileType::GRASS;
+    }
+}
+
 

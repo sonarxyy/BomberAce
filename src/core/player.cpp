@@ -1,12 +1,32 @@
 #include "player.hpp"
 
-Player::Player() {
+Player::Player(SDL_Renderer* renderer) : renderer(renderer) {
+    audioManager = new AudioManager();
+    textureManager = new TextureManager(renderer);
+    spriteSheet = textureManager->LoadTexture(PLAYER_SPRITESHEET);
+    grassFootstep = audioManager->LoadSound(GRASS_FOOTSTEP_EFFECT);
+    snowFootstep = audioManager->LoadSound(SNOW_FOOTSTEP_EFFECT);
     x = 48;
     y = 48;
-    speed = 48;
+    speed = TILE_SIZE/ 4;
     width = TILE_SIZE;
     height = TILE_SIZE;
     health = 3;
+
+    // SFX
+    lastPlayTime = 0;
+    currentTime = 0;
+
+    // Animation
+    frame = 0;
+    frameTime = 120; // 120ms per frame
+    lastFrameTime = 0;
+    state = State::IDLE;
+    direction = Direction::FRONT;
+}
+
+Player::~Player() {
+    delete audioManager;
 }
 
 void Player::TakeDamage() {
@@ -19,47 +39,95 @@ void Player::TakeDamage() {
     }
 }
 
-void Player::HandleInput(SDL_Event& event, TileManager& map, std::vector<Bomb>& bombs) {
-    int newX = x;
-    int newY = y;
+void Player::HandleInput(const Uint8* keyState, TileManager& map, std::vector<Bomb>& bombs) {
+    int oldX = x, oldY = y;  // Store old position
+    int newX = x, newY = y;  // Prepare new position
+    bool moved = false;
 
-    if (event.type == SDL_KEYDOWN) {
-        switch (event.key.keysym.sym) {
-        case SDLK_UP:
-        case SDLK_w:
-            newY -= speed; 
-            break;
-        case SDLK_DOWN:
-        case SDLK_s:
-            newY += speed; 
-            break;
-        case SDLK_LEFT:  
-        case SDLK_a:
-            newX -= speed;
-            break;
-        case SDLK_RIGHT:
-        case SDLK_d:
-            newX += speed; 
-            break;
-        case SDLK_SPACE:
-            bombs.push_back(Bomb(x, y));
-            break;
-        }
+    // Handle movement input
+    if (keyState[SDL_SCANCODE_W]) {
+        newY -= speed;
+        direction = Direction::BACK;
+    }
+    if (keyState[SDL_SCANCODE_S]) {
+        newY += speed;
+        direction = Direction::FRONT;
+    }
+    if (keyState[SDL_SCANCODE_A]) {
+        newX -= speed;
+        direction = Direction::LEFT;
+    }
+    if (keyState[SDL_SCANCODE_D]) {
+        newX += speed;
+        direction = Direction::RIGHT;
+    }
+    if (keyState[SDL_SCANCODE_SPACE]) {
+        PlaceBomb(bombs);
     }
 
+    // Check for collisions before applying movement
     SDL_Rect newRect = { newX, newY, width, height };
-
-    // Check collision with the tile map
     if (!map.CheckCollision(newRect)) {
         x = newX;
         y = newY;
     }
+
+    // Determine if the player actually moved
+    moved = (x != oldX || y != oldY);
+    state = moved ? State::WALKING : State::IDLE;
+
+    // Play footstep sound only if moving into a new tile
+    if (moved) {
+        Uint32 currentTime = SDL_GetTicks();
+        int tileCol = x / TILE_SIZE;
+        int tileRow = y / TILE_SIZE;
+        static int lastTileCol = tileCol, lastTileRow = tileRow;
+
+        if ((tileCol != lastTileCol || tileRow != lastTileRow) && (currentTime - lastPlayTime > 200)) {
+            TileManager::TileType tileType = map.GetTileTypeAt(x, y);
+
+            switch (tileType) {
+            case TileManager::TileType::GRASS:
+                audioManager->PlaySound(grassFootstep);
+                break;
+            case TileManager::TileType::SNOW:
+                audioManager->PlaySound(snowFootstep);
+                break;
+            }
+
+            lastPlayTime = currentTime;
+            lastTileCol = tileCol;
+            lastTileRow = tileRow;
+        }
+    }
+}
+
+void Player::UpdateAnimation() {
+    Uint32 currentTime = SDL_GetTicks();
+    if (currentTime - lastFrameTime > frameTime) {
+        frame = (frame + 1) % 4;  // Cycle through 4 frames
+        lastFrameTime = currentTime;
+    }
+
+    // Determine sprite position based on state and direction
+    int row = 0;
+    int startCol = 0;
+
+    if (direction == Direction::FRONT) startCol = 0;
+    if (direction == Direction::RIGHT) startCol = 8;
+    if (direction == Direction::BACK) startCol = 16;
+    if (direction == Direction::LEFT) startCol = 24;
+
+    if (state == State::IDLE) row = 0;
+    if (state == State::WALKING) row = 1;
+
+    srcRect = { (startCol + frame) * SPRITE_TILE, row * SPRITE_TILE, SPRITE_TILE, SPRITE_TILE };
 }
 
 void Player::Render(SDL_Renderer* renderer) {
-    SDL_Rect rect = { x, y, width, height };
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_RenderFillRect(renderer, &rect);
+    UpdateAnimation();
+    destRect = { x, y, width, height };
+    SDL_RenderCopy(renderer, spriteSheet, &srcRect, &destRect);
 }
 
 SDL_Rect Player::GetRect() const {
@@ -87,5 +155,9 @@ void Player::PlaceBomb(std::vector<Bomb>& bombs) {
     }
 
     // Place a new bomb only if there's no existing one
-    bombs.push_back(Bomb(bombX, bombY));
+    bombs.push_back(Bomb(bombX, bombY, renderer));
+}
+
+void Player::GameOver() {
+
 }

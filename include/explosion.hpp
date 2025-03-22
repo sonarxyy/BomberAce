@@ -6,6 +6,7 @@
 #include <string>
 #include "constants.hpp"
 #include "texture_manager.hpp"
+#include "audio_manager.hpp"
 #include <iomanip>
 #include <sstream>
 
@@ -25,7 +26,8 @@ private:
     bool isExpired;
     std::vector<SDL_Texture*> frames;
     TextureManager* textureManager;
-    static std::vector<SDL_Texture*> sharedFrames;
+    static std::vector<SDL_Texture*> sharedFrames; // Reuse animation texture if already initialized
+    AudioManager* audioManager;
 };
 
 #endif

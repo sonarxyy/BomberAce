@@ -4,9 +4,15 @@
 #include <SDL.h>
 #include "tile_manager.hpp"
 #include "bomb.hpp"
+#include "texture_manager.hpp"
+#include "audio_manager.hpp"
+#include "constants.hpp"
+#include <SDL_mixer.h>
 #include <vector>
+#include <iostream>
 
 class Bomb;
+class TileManager;
 
 class Player {
 private:
@@ -14,15 +20,36 @@ private:
 	int speed;
 	int health;
 
+	// For SFX
+	AudioManager* audioManager;
+	Mix_Chunk* grassFootstep;
+	Mix_Chunk* snowFootstep;
+	Uint32 lastPlayTime, currentTime;
+
+	// For animation
+	TextureManager* textureManager;
+	SDL_Renderer* renderer;
+	SDL_Texture* spriteSheet;
+
+	SDL_Rect srcRect, destRect;
+	int frame;
+	Uint32 frameTime;
+	Uint32 lastFrameTime;
+	enum class State { IDLE, WALKING } state;
+	enum class Direction { FRONT, BACK, LEFT, RIGHT } direction;
+
 public:
-	Player();
-	void HandleInput(SDL_Event& event, TileManager& map, std::vector<Bomb>& bombs);
+	Player(SDL_Renderer* renderer);
+	~Player();
+	void HandleInput(const Uint8* keyState, TileManager& map, std::vector<Bomb>& bombs);
+	void UpdateAnimation();
 	void Render(SDL_Renderer* renderer);
 	SDL_Rect GetRect() const;
 	int GetHealth() const;
 	void TakeDamage();
 	void SetPosition(int newX, int newY);
 	void PlaceBomb(std::vector<Bomb>& bombs);
+	void GameOver();
 };
 
 #endif

@@ -8,7 +8,9 @@
 #include <string>
 #include "constants.hpp"
 #include "texture_manager.hpp"
+#include "bomb.hpp"
 
+class Bomb;
 
 class TileManager {
 public:
@@ -16,9 +18,19 @@ public:
     void LoadTexture();
     void Render(SDL_Renderer* renderer);
     bool CheckCollision(SDL_Rect& playerRect) const;
-    bool isWall(int col, int row) const;
+    bool IsWall(int col, int row) const;
     bool DestroyTile(int col, int row);
-    bool getRenderState() const;
+    bool GetRenderState() const;
+
+    // For sound effect
+    enum class TileType {
+        GRASS,
+        SNOW,
+        WALL,
+        BREAKABLE,
+        FLOOR
+    };
+    TileType GetTileTypeAt(int x, int y);
 
 private:
     bool isRendered;
@@ -31,6 +43,4 @@ private:
     std::vector<SDL_Texture*> breakableTextures;
     std::vector<SDL_Texture*> unbreakableTextures;
 };
-
-
 #endif

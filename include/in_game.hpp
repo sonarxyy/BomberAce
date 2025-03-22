@@ -19,7 +19,7 @@ class InGame {
 public:
 	InGame(SDL_Renderer* renderer);
 	~InGame();
-	void HandleInputs(SDL_Event& event);
+	void HandleInputs(const Uint8* keyState);
 	void Update();
 	void Render();
 
@@ -30,7 +30,7 @@ private:
 	TextureManager* textureManager;
 	AudioManager* audioManager;
 	TileManager* tileManager;
-	Player player;
+	Player* player;
 	std::vector<Bomb> bombs;
 	std::vector<Enemy> enemies;
 	std::vector<Explosion> explosions;

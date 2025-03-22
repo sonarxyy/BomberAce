@@ -7,7 +7,7 @@ bool fullscreen = 0;
 
 int main(int argc, char* argv[]) {
 	engine = new Engine(title, posX, posY, SCREEN_WIDTH, SCREEN_HEIGHT, fullscreen);
-	while (engine->getRunningState()) {
+	while (engine->GetRunningState()) {
 		engine->Run();
 	}
 	engine->Clean();

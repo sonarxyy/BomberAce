@@ -3,6 +3,8 @@
 std::vector<SDL_Texture*> Explosion::sharedFrames;
 Explosion::Explosion(int x, int y, SDL_Renderer* renderer) : x(x), y(y), frameIndex(0), isExpired(false) {
     textureManager = new TextureManager(renderer);
+    audioManager = new AudioManager();
+    audioManager->PlaySound(audioManager->LoadSound(EXPLOSION_EFFECT));
     lastFrameTime = SDL_GetTicks();
     explosionRect = { x, y , TILE_SIZE, TILE_SIZE};
     LoadTexture(renderer);
@@ -14,7 +16,7 @@ void Explosion::LoadTexture(SDL_Renderer* renderer) {
         return;
     }
 
-    for (int i = 0; i < FRAME; i++) {
+    for (int i = 0; i < EXPLOSION_FRAME; i++) {
         std::ostringstream oss;
         oss << std::setw(3) << std::setfill('0') << i;
         std::string path = "assets/effect/Effect_Explosion/Effect_Explosion_1_" + oss.str() + ".png";
