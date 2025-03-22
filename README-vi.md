@@ -34,7 +34,19 @@ Một dự án trò chơi nhỏ được viết bằng C++ dựa trên thư vi�
 - Game State Manager: Quản lý trạng thái của trò chơi.
   - Thiết đặt trạng thái hiện tại cho trò chơi.
   - Lấy trạng thái hiện tại của trò chơi.
-- Constants : Định nghĩa hằng số cho trò chơi.
+- Constants: Định nghĩa hằng số cho trò chơi.
+- Tile Manager: Quản lý bản đồ ô của trò chơi.
+  - Nạp vào đồ họa của từng kiểu ô.
+  - Kết xuất bản đồ ô.
+  - Kiểm tra va chạm với bất cứ vật thể nào (người chơi, kẻ địch, vụ nổ).
+  - Check if designated position is a wall.
+  - Phá hủy những ô có thể phá.
+  - Lấy kiểu ô ở vị trí chỉ định.
+- Level Manager: Quản lý nạp vào màn chơi.
+  - Nạp màn chơi từ tập tin chữ.
+
+
+- Lớp không thể thiếu của trò chơi.
 
 
 # Xây dựng và cài đặt
@@ -65,7 +77,13 @@ Trong thư mục vừa clone, chạy install.bat. Sau khi cài đặt xong, ch�
 
 
 # Nguồn
-| Tác giả |          Thành phần trò chơi        |                                                                 Patreon                                                                |                                                             Itch.io                                                             |
-|:------:|:-----------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
-|  Kenny | Giao diện chính, Âm thanh, Đồ họa | [![Static Badge](https://img.shields.io/badge/Patreon-white?style=flat&logo=patreon&labelColor=black)](https://www.patreon.com/kenney) | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://kenney.itch.io/) |
-| Lynocs |        Hình nền       |                                                                   N/A                                                                  | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://lynocs.itch.io/) |
+|                              Tác giả                              |             Tài sản             |
+|:-----------------------------------------------------------------:|:-------------------------------:|
+|  [Gemini Imagen3](https://deepmind.google/technologies/imagen-3/) |            Main Menu            |
+|                   [bigjpg](https://bigjpg.com/)                   |          Upscale Image          |
+|           [Netherzapdos](https://netherzapdos.itch.io/)           | Player's sprite, enemy's sprite |
+|                 [Kenney](https://kenney.nl/assets)                |               SFX               |
+|      [Caz Creates Games](https://caz-creates-games.itch.io/)      |         Bomb's textures         |
+|            [JAR Incorporated](https://jarinc.itch.io/)            |         Heart's textures        |
+|               [CodeManu](https://codemanu.itch.io/)               |       Explosion's textures      |
+| [Raymond Larabie](https://www.dafont.com/profile.php?user=137418) |           Xirod's font          |

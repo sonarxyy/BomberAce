@@ -111,10 +111,6 @@ bool TileManager::DestroyTile(int col, int row) {
     return (map[row][col] == 1); // Stop explosion at walls
 }
 
-bool TileManager::GetRenderState() const {
-    return isRendered;
-}
-
 TileManager::TileType TileManager::GetTileTypeAt(int x, int y) {
     int tileX = x / TILE_SIZE;
     int tileY = y / TILE_SIZE;

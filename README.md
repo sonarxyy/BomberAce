@@ -34,7 +34,19 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
 - Game State Manager: Manage the states of the game.
   - Set current state of the game.
   - Get current state of the game.
-- Constants : Define constants for the game.
+- Constants: Define constants for the game.
+- Tile Manager: Manage tile map of the game.
+  - Load texture for each tile type.
+  - Render tile map of the game.
+  - Check collision with any objects (player, enemy, explosion).
+  - Check if designated position is a wall.
+  - Destroy breakable tile.
+  - Get tile type at designated position.
+- Level Manager: Manage the loading levels of the game.
+  - Load level from text file.
+
+
+# Indispensible class of the game.
 
 
 # Build and Installation
@@ -65,7 +77,13 @@ Inside cloned directory, run install.bat. After installation is done, run build.
 
 
 # Credits
-| Author |          Assets         |                                                                 Patreon                                                                |                                                             Itch.io                                                             |
-|:------:|:-----------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
-|  Kenny | Main UI, Audio, Texture | [![Static Badge](https://img.shields.io/badge/Patreon-white?style=flat&logo=patreon&labelColor=black)](https://www.patreon.com/kenney) | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://kenney.itch.io/) |
-| Lynocs |        Background       |                                                                   N/A                                                                  | [![Static Badge](https://img.shields.io/badge/Itch.io-white?style=flat&logo=itch.io&labelColor=black)](https://lynocs.itch.io/) |
+|                               Author                              |              Assets             |
+|:-----------------------------------------------------------------:|:-------------------------------:|
+|  [Gemini Imagen3](https://deepmind.google/technologies/imagen-3/) |            Main Menu            |
+|                   [bigjpg](https://bigjpg.com/)                   |          Upscale Image          |
+|           [Netherzapdos](https://netherzapdos.itch.io/)           | Player's sprite, enemy's sprite |
+|                 [Kenney](https://kenney.nl/assets)                |               SFX               |
+|      [Caz Creates Games](https://caz-creates-games.itch.io/)      |         Bomb's textures         |
+|            [JAR Incorporated](https://jarinc.itch.io/)            |         Heart's textures        |
+|               [CodeManu](https://codemanu.itch.io/)               |       Explosion's textures      |
+| [Raymond Larabie](https://www.dafont.com/profile.php?user=137418) |           Xirod's font          |

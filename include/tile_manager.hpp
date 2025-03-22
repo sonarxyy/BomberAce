@@ -20,7 +20,6 @@ public:
     bool CheckCollision(SDL_Rect& playerRect) const;
     bool IsWall(int col, int row) const;
     bool DestroyTile(int col, int row);
-    bool GetRenderState() const;
 
     // For sound effect
     enum class TileType {
