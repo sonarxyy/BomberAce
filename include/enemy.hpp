@@ -27,7 +27,20 @@ private:
     int width, height;
     bool alive;
     SDL_Renderer* renderer;
-    int direction; // 0 = UP, 1 = DOWN, 2 = LEFT, 3 = RIGHT
+    
+    // For animation
+    TextureManager* textureManager;
+    SDL_Texture* enemy1;
+    SDL_Texture* enemy2;
+    SDL_Texture* enemy3;
+
+    SDL_Rect srcRect, destRect;
+    int frame;
+    Uint32 frameTime;
+    Uint32 lastFrameTime;
+    enum class State { IDLE, WALKING } state;
+    enum class Direction { BACK, FRONT, LEFT, RIGHT } direction;
+
     int moveTimer; // Change direction every few frames
     int bombCooldown;
 

@@ -79,12 +79,12 @@ void TileManager::Render(SDL_Renderer* renderer) {
 }
 
 
-bool TileManager::CheckCollision(SDL_Rect& playerRect) const {
+bool TileManager::CheckCollision(SDL_Rect& objectRect) const {
     for (int row = 0; row < MAP_ROWS; row++) {
         for (int col = 0; col < MAP_COLS; col++) {
-            if (map[row][col] == 1 || map[row][col] == 2) {
+            if (map[row][col] == 1 || map[row][col] == 2 || map[row][col] == 5) {
                 SDL_Rect tileRect = { col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE };
-                if (SDL_HasIntersection(&playerRect, &tileRect)) {
+                if (SDL_HasIntersection(&objectRect, &tileRect)) {
                     return true;
                 }
             }
@@ -134,5 +134,11 @@ TileManager::TileType TileManager::GetTileTypeAt(int x, int y) {
     default: return TileType::GRASS;
     }
 }
+
+void TileManager::SetTile(int col, int row, TileType type) {
+    if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) return;
+    map[row][col] = static_cast<int>(type);
+}
+
 
 

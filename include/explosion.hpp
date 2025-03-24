@@ -12,11 +12,13 @@
 
 class Explosion {
 public:
-    Explosion(int x, int y, SDL_Renderer* renderer);
+    Explosion(int x, int y, SDL_Renderer* renderer, const int& explosionId);
     void Update();
     void Render(SDL_Renderer* renderer);
     bool IsExpired() const;
     void LoadTexture(SDL_Renderer* renderer);
+    std::vector<SDL_Rect> GetAffectedTiles();
+    int GetExplosionId() const;
 
 private:
     int x, y;
@@ -28,6 +30,10 @@ private:
     TextureManager* textureManager;
     static std::vector<SDL_Texture*> sharedFrames; // Reuse animation texture if already initialized
     AudioManager* audioManager;
+
+    // For score calculation
+    std::vector<SDL_Rect> affectedTiles;
+    int explosionId;  // ID from the bomb that created this explosion
 };
 
 #endif

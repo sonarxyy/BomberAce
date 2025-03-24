@@ -2,6 +2,7 @@
 #define IN_GAME_HPP
 
 #include <SDL.h>
+#include <unordered_set>
 #include <algorithm>
 #include "constants.hpp"
 #include "game_states_manager.hpp"

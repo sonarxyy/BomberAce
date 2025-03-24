@@ -1,6 +1,6 @@
 #include "engine.hpp"
 
-Engine::Engine(const char* title, int posX, int posY, int screenWidth, int screenHeight, bool fullscreen) : window(nullptr), renderer(nullptr), music(nullptr), player(renderer), isRunning(false)
+Engine::Engine(const char* title, int posX, int posY, int screenWidth, int screenHeight, bool fullscreen) : window(nullptr), renderer(nullptr), music(nullptr), player(renderer, *tileManager), isRunning(false)
 {
 	Initialize(title, posX, posY, SCREEN_WIDTH, SCREEN_HEIGHT, fullscreen);
 }

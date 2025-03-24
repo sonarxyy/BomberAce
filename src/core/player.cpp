@@ -1,17 +1,20 @@
 #include "player.hpp"
 
-Player::Player(SDL_Renderer* renderer) : renderer(renderer) {
-    audioManager = new AudioManager();
+Player::Player(SDL_Renderer* renderer, TileManager& map) : renderer(renderer) {
     textureManager = new TextureManager(renderer);
-    spriteSheet = textureManager->LoadTexture(PLAYER_SPRITESHEET);
+    audioManager = new AudioManager();
     grassFootstep = audioManager->LoadSound(GRASS_FOOTSTEP_EFFECT);
     snowFootstep = audioManager->LoadSound(SNOW_FOOTSTEP_EFFECT);
     x = 48;
     y = 48;
-    speed = TILE_SIZE/ 4;
+    speed = TILE_SIZE / 8;
     width = TILE_SIZE;
     height = TILE_SIZE;
+    srcRect = { x , y, width, height };
+    destRect = { x , y, width, height };
     health = 3;
+    playerTexture = IMG_LoadTexture(renderer, PLAYER_SPRITESHEET);
+    canPlaceBomb = true;
 
     // SFX
     lastPlayTime = 0;
@@ -35,7 +38,7 @@ void Player::TakeDamage() {
     }
 
     if (health == 0) {
-        // Game over: handling
+        GameOver();
     }
 }
 
@@ -62,7 +65,7 @@ void Player::HandleInput(const Uint8* keyState, TileManager& map, std::vector<Bo
         direction = Direction::RIGHT;
     }
     if (keyState[SDL_SCANCODE_SPACE]) {
-        PlaceBomb(bombs);
+        PlaceBomb(bombs, map);
     }
 
     // Check for collisions before applying movement
@@ -127,7 +130,7 @@ void Player::UpdateAnimation() {
 void Player::Render(SDL_Renderer* renderer) {
     UpdateAnimation();
     destRect = { x, y, width, height };
-    SDL_RenderCopy(renderer, spriteSheet, &srcRect, &destRect);
+    SDL_RenderCopy(renderer, playerTexture, &srcRect, &destRect);
 }
 
 SDL_Rect Player::GetRect() const {
@@ -143,7 +146,11 @@ void Player::SetPosition(int newX, int newY) {
     y = newY;
 }
 
-void Player::PlaceBomb(std::vector<Bomb>& bombs) {
+void Player::PlaceBomb(std::vector<Bomb>& bombs, TileManager& map) {
+    if (!canPlaceBomb) {
+        return;
+    }
+
     int bombX = (x / TILE_SIZE) * TILE_SIZE;
     int bombY = (y / TILE_SIZE) * TILE_SIZE;
 
@@ -155,9 +162,17 @@ void Player::PlaceBomb(std::vector<Bomb>& bombs) {
     }
 
     // Place a new bomb only if there's no existing one
-    bombs.push_back(Bomb(bombX, bombY, renderer));
+    bombs.push_back(Bomb(bombX, bombY, renderer, map, Bomb::Entity::PLAYER));
+
+    canPlaceBomb = false;
 }
 
 void Player::GameOver() {
+    SDL_SetRenderDrawColor(renderer, WHITE.r, WHITE.g, WHITE.b, 255);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, gameoverBackground, NULL, NULL);
+}
 
+void Player::SetCanPlaceBomb() {
+    canPlaceBomb = true;
 }

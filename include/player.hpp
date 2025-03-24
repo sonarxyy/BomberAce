@@ -19,6 +19,7 @@ private:
 	int x, y, width, height;
 	int speed;
 	int health;
+	bool canPlaceBomb;
 
 	// For SFX
 	AudioManager* audioManager;
@@ -29,7 +30,7 @@ private:
 	// For animation
 	TextureManager* textureManager;
 	SDL_Renderer* renderer;
-	SDL_Texture* spriteSheet;
+	SDL_Texture* playerTexture;
 
 	SDL_Rect srcRect, destRect;
 	int frame;
@@ -38,8 +39,11 @@ private:
 	enum class State { IDLE, WALKING } state;
 	enum class Direction { FRONT, BACK, LEFT, RIGHT } direction;
 
+	// Game over
+	SDL_Texture* gameoverBackground;
+
 public:
-	Player(SDL_Renderer* renderer);
+	Player(SDL_Renderer* renderer, TileManager& map);
 	~Player();
 	void HandleInput(const Uint8* keyState, TileManager& map, std::vector<Bomb>& bombs);
 	void UpdateAnimation();
@@ -48,8 +52,9 @@ public:
 	int GetHealth() const;
 	void TakeDamage();
 	void SetPosition(int newX, int newY);
-	void PlaceBomb(std::vector<Bomb>& bombs);
+	void PlaceBomb(std::vector<Bomb>& bombs, TileManager& map);
 	void GameOver();
+	void SetCanPlaceBomb();
 };
 
 #endif

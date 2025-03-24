@@ -3,13 +3,17 @@
 #include <cmath>    // For distance calculations
 
 Enemy::Enemy(int startX, int startY, SDL_Renderer* renderer) : renderer(renderer) {
+    textureManager = new TextureManager(renderer);
     x = startX;
     y = startY;
-    speed = TILE_SIZE / 8;
+    speed = TILE_SIZE / 12;
     width = TILE_SIZE;
     height = TILE_SIZE;
     alive = true;
-    direction = rand() % 4; // Random initial direction
+    direction = static_cast<Direction>(rand() % 4); // Random initial direction
+    enemy1 = textureManager->LoadTexture(ENEMY_1_SPRITESHEET);
+    enemy2 = textureManager->LoadTexture(ENEMY_2_SPRITESHEET);
+    enemy3 = textureManager->LoadTexture(ENEMY_3_SPRITESHEET);
     moveTimer = 120; // Change direction every 120 frames
     bombCooldown = 0;
     lastRetryTime = 0;
@@ -25,10 +29,10 @@ void Enemy::Update(TileManager& map, std::vector<Bomb>& bombs, SDL_Renderer* ren
 
     int newX = x, newY = y;
     switch (direction) {
-    case 0: newY -= speed; break; // UP
-    case 1: newY += speed; break; // DOWN
-    case 2: newX -= speed; break; // LEFT
-    case 3: newX += speed; break; // RIGHT
+    case Direction::BACK: newY -= speed; break; // UP
+    case Direction::FRONT: newY += speed; break; // DOWN
+    case Direction::LEFT: newX -= speed; break; // LEFT
+    case Direction::RIGHT: newX += speed; break; // RIGHT
     }
 
     SDL_Rect newRect = { newX, newY, width, height };
@@ -39,7 +43,7 @@ void Enemy::Update(TileManager& map, std::vector<Bomb>& bombs, SDL_Renderer* ren
     else {
         // If movement fails, retry after 1000ms
         if (SDL_GetTicks() - lastRetryTime > 1000) {
-            direction = rand() % 4;
+            direction = static_cast<Direction>(rand() % 4);
             lastRetryTime = SDL_GetTicks();
         }
     }
@@ -70,7 +74,7 @@ void Enemy::ChooseDirection(TileManager& map, std::vector<Bomb>& bombs) {
         moveCounter++;
     }
     else {
-        direction = rand() % 4;
+        direction = static_cast<Direction>(rand() % 4);
         moveCounter = 0;
     }
 }
@@ -110,7 +114,7 @@ void Enemy::PlaceBomb(std::vector<Bomb>& bombs, SDL_Renderer* renderer, TileMana
     }
 
     if ((nearBreakable && (rand() % 100 < 60)) || (onFloorTile && (rand() % 100 < 30))) {
-        bombs.push_back(Bomb(bombX, bombY, renderer));
+        bombs.push_back(Bomb(bombX, bombY, renderer, map, Bomb::Entity::ENEMY));
     }
 }
 
@@ -175,10 +179,10 @@ void Enemy::EscapeFromBomb(TileManager& map, std::vector<Bomb>& bombs) {
     }
 
     if (!safeDirections.empty()) {
-        direction = safeDirections[rand() % safeDirections.size()]; // Pick a random safe direction
+        direction = static_cast<Direction>(safeDirections[rand() % safeDirections.size()]); // Pick a random safe direction
     }
     else {
         // If trapped, keep retrying
-        direction = rand() % 4;
+        direction = static_cast<Direction>(rand() % 4);
     }
 }

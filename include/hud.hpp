@@ -13,7 +13,7 @@ public:
     HUD(SDL_Renderer* renderer);
     ~HUD();
 
-    void Update(int level, int score, Uint32 remainingTime, int health);
+    void Update(const int& level, const int& score, Uint32 remainingTime, const int& health);
     void Render();
 
 private:

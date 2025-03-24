@@ -2,8 +2,8 @@
 #define CONSTANTS_HPP
 
 #include <SDL.h>
-
-// Window title (using constexpr to avoid linker error)
+// Use constexpr to avoid linker error
+// Window title 
 constexpr const char* title = "Bomber Ace";
 
 // Screen resolution
@@ -22,7 +22,6 @@ constexpr const SDL_Color WHITE = { 255, 255, 255 };
 constexpr const SDL_Color BLACK = { 0, 0, 0 };
 constexpr const SDL_Color GREEN = { 0, 128, 0 };
 
-// Path
 // Main Menu Path
 constexpr const char* OPEN_SANS_FONT_FILE = "assets/font/open_sans_font.ttf";
 constexpr const char* XIROD_FONT_FILE = "assets/font/xirod_font.ttf";
@@ -34,8 +33,7 @@ constexpr const char* MAINMENU_BOX = "assets/image/button_rectangle_depth_border
 
 // Background
 constexpr const char* MAINMENU_BACKGROUND = "assets/image/mainmenubackground.png";
-
-// Options Menu Path
+constexpr const char* GAMEOVER_BACKGROUND = "assets/image/gameoverbackground.png";
 constexpr const char* OPTIONSMENU_BACKGROUND = "assets/image/optionsmenubackground.png";
 
 // Tile generation
@@ -54,7 +52,10 @@ constexpr const char* GRASS_FOOTSTEP_EFFECT = "assets/audio/footstep_grass.ogg";
 constexpr const char* SNOW_FOOTSTEP_EFFECT = "assets/audio/footstep_snow.ogg";
 
 // Spritesheet
-constexpr const char* PLAYER_SPRITESHEET = "assets/spritesheet/cat_siamese.png";
+constexpr const char* PLAYER_SPRITESHEET = "assets/spritesheet/cat_siamese_spritesheet.png";
+constexpr const char* ENEMY_1_SPRITESHEET = "assets/spritesheet/cat_1_spritesheet.png";
+constexpr const char* ENEMY_2_SPRITESHEET = "assets/spritesheet/cat_2_spritesheet.png";
+constexpr const char* ENEMY_3_SPRITESHEET = "assets/spritesheet/cat_3_spritesheet.png";
 constexpr const int SPRITE_TILE = 32;
 
 #endif

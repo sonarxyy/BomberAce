@@ -1,13 +1,15 @@
 #include "explosion.hpp"
 
 std::vector<SDL_Texture*> Explosion::sharedFrames;
-Explosion::Explosion(int x, int y, SDL_Renderer* renderer) : x(x), y(y), frameIndex(0), isExpired(false) {
+
+Explosion::Explosion(int x, int y, SDL_Renderer* renderer, const int& explosionId) : x(x), y(y), frameIndex(0), isExpired(false), explosionId(explosionId) {
     textureManager = new TextureManager(renderer);
     audioManager = new AudioManager();
     audioManager->PlaySound(audioManager->LoadSound(EXPLOSION_EFFECT));
     lastFrameTime = SDL_GetTicks();
     explosionRect = { x, y , TILE_SIZE, TILE_SIZE};
     LoadTexture(renderer);
+    affectedTiles.push_back(explosionRect);
 }
 
 void Explosion::LoadTexture(SDL_Renderer* renderer) {
@@ -50,4 +52,12 @@ void Explosion::Render(SDL_Renderer* renderer) {
 
 bool Explosion::IsExpired() const {
     return isExpired;
+}
+
+std::vector<SDL_Rect> Explosion::GetAffectedTiles() {
+    return affectedTiles;
+}
+
+int Explosion::GetExplosionId() const {
+    return explosionId;
 }

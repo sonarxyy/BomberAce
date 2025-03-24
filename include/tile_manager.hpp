@@ -23,13 +23,15 @@ public:
 
     // For sound effect
     enum class TileType {
-        GRASS,
-        SNOW,
+        FLOOR,
         WALL,
         BREAKABLE,
-        FLOOR
+        GRASS,
+        SNOW,
+        BOMB
     };
     TileType GetTileTypeAt(int x, int y);
+    void SetTile(int x, int y, TileType);
 
 private:
     bool isRendered;

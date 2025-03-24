@@ -13,7 +13,7 @@ HUD::~HUD() {
     delete textureManager;
 }
 
-void HUD::Update(int level, int score, Uint32 remainingTime, int health) {
+void HUD::Update(const int& level, const int& score, Uint32 remainingTime, const int& health) {
     SDL_DestroyTexture(levelTexture);
     SDL_DestroyTexture(scoreTexture);
     SDL_DestroyTexture(timeTexture);
@@ -34,7 +34,7 @@ void HUD::Update(int level, int score, Uint32 remainingTime, int health) {
     heartRects.clear();
     for (int i = 0; i < health; i++) {
         heartTextures.push_back(heartTexture);
-        heartRects.push_back({ i * 48, 7, 64, 64 });
+        heartRects.push_back({ i * TILE_SIZE, TILE_SIZE / 8, TILE_SIZE * 3 / 2, TILE_SIZE * 3 / 2 });
     }
 }
 
