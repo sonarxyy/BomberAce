@@ -17,6 +17,14 @@ Enemy::Enemy(int startX, int startY, SDL_Renderer* renderer) : renderer(renderer
     moveTimer = 120; // Change direction every 120 frames
     bombCooldown = 0;
     lastRetryTime = 0;
+
+    srcRect = { x, y, width, height };
+    destRect = { x, y, width, height };
+    frame = 0;
+    frameTime = 120; // 120 ms delay
+    lastFrameTime = 0;
+    state = State::IDLE;
+    direction = Direction::FRONT;
 }
 
 void Enemy::Update(TileManager& map, std::vector<Bomb>& bombs, SDL_Renderer* renderer) {
@@ -28,6 +36,7 @@ void Enemy::Update(TileManager& map, std::vector<Bomb>& bombs, SDL_Renderer* ren
     }
 
     int newX = x, newY = y;
+    bool moved = false;
     switch (direction) {
     case Direction::BACK: newY -= speed; break; // UP
     case Direction::FRONT: newY += speed; break; // DOWN
@@ -39,6 +48,7 @@ void Enemy::Update(TileManager& map, std::vector<Bomb>& bombs, SDL_Renderer* ren
     if (!map.CheckCollision(newRect)) {
         x = newX;
         y = newY;
+        moved = true;
     }
     else {
         // If movement fails, retry after 1000ms
@@ -47,6 +57,8 @@ void Enemy::Update(TileManager& map, std::vector<Bomb>& bombs, SDL_Renderer* ren
             lastRetryTime = SDL_GetTicks();
         }
     }
+
+    moved ? state = State::WALKING : state = State::IDLE;
 
     if (--moveTimer <= 0) {
         moveTimer = 120;
@@ -120,10 +132,9 @@ void Enemy::PlaceBomb(std::vector<Bomb>& bombs, SDL_Renderer* renderer, TileMana
 
 void Enemy::Render(SDL_Renderer* renderer) {
     if (!alive) return;
-
-    SDL_Rect rect = { x, y, width, height };
-    SDL_SetRenderDrawColor(renderer, RED.r, RED.g, RED.b, 255);
-    SDL_RenderFillRect(renderer, &rect);
+    UpdateAnimation();
+    SDL_Rect destRect = { x, y, TILE_SIZE, TILE_SIZE };
+    SDL_RenderCopy(renderer, enemy1, &srcRect, &destRect);
 }
 
 void Enemy::Kill() {
@@ -185,4 +196,25 @@ void Enemy::EscapeFromBomb(TileManager& map, std::vector<Bomb>& bombs) {
         // If trapped, keep retrying
         direction = static_cast<Direction>(rand() % 4);
     }
+}
+
+void Enemy::UpdateAnimation() {
+    Uint32 currentTime = SDL_GetTicks();
+    if (currentTime - lastFrameTime >= frameTime) {
+        frame = (frame + 1) % 4;
+        lastFrameTime = currentTime;
+    }
+
+    int row = 0;
+    int startCol = 0;
+
+    if (direction == Direction::FRONT) startCol = 0;
+    if (direction == Direction::RIGHT) startCol = 8;
+    if (direction == Direction::BACK) startCol = 16;
+    if (direction == Direction::LEFT) startCol = 24;
+
+    if (state == State::IDLE) row = 0;
+    if (state == State::WALKING) row = 1;
+
+    srcRect = { (startCol + frame) * SPRITE_TILE, row * SPRITE_TILE, SPRITE_TILE, SPRITE_TILE };
 }

@@ -96,7 +96,7 @@ echo Cleaning up temporary files...
 if exist "%CMAKE_ZIP%" del "%CMAKE_ZIP%"
 if exist "%NINJA_ZIP%" del "%NINJA_ZIP%"
 
-echo CMake and Ninja installation process completed, please run the build.bat to build the game.
+echo CMake and Ninja installation process completed, please run build.bat to build the game.
 pause
 
 :end

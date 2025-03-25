@@ -48,6 +48,7 @@ private:
     bool IsInBombRadius(int x, int y, std::vector<Bomb>& bombs);
     void ChooseDirection(TileManager& map, std::vector<Bomb>& bombs);
     void EscapeFromBomb(TileManager& map, std::vector<Bomb>& bombs);
+    void UpdateAnimation();
 };
 
 #endif
