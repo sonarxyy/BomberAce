@@ -13,7 +13,8 @@ class TileManager;
 
 class Enemy {
 public:
-    Enemy(int startX, int startY, SDL_Renderer* renderer);
+    std::vector<Enemy*> enemies;
+    Enemy(int startX, int startY, SDL_Renderer* renderer, int enemyIndex);
     void Update(TileManager& map, std::vector<Bomb>& bombs, SDL_Renderer* renderer);
     void PlaceBomb(std::vector<Bomb>& bombs, SDL_Renderer* renderer, TileManager& map);
     void Render(SDL_Renderer* renderer);
@@ -30,9 +31,7 @@ private:
     
     // For animation
     TextureManager* textureManager;
-    SDL_Texture* enemy1;
-    SDL_Texture* enemy2;
-    SDL_Texture* enemy3;
+    SDL_Texture* texture;
 
     SDL_Rect srcRect, destRect;
     int frame;

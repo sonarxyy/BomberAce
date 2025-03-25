@@ -9,7 +9,9 @@ InGame::InGame(SDL_Renderer* renderer) : renderer(renderer) {
     level = 1;
     score = 0;
     hud = new HUD(renderer);
-    enemies.push_back(Enemy (816, 48, renderer));
+    enemies.push_back(Enemy(864, 48, renderer, 0));
+    enemies.push_back(Enemy(48, 864, renderer, 1));
+    enemies.push_back(Enemy(864, 864, renderer, 2));
     startTime = SDL_GetTicks();
     levelDuration = 150000;
 }
@@ -18,6 +20,9 @@ InGame::~InGame() {
     delete textManager;
     delete textureManager;
     delete audioManager;
+    delete tileManager;
+    delete player;
+    delete hud;
 }
 
 void InGame::HandleInputs(const Uint8* keyState) {

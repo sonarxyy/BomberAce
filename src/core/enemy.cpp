@@ -2,7 +2,7 @@
 #include <cstdlib>  // For random movement
 #include <cmath>    // For distance calculations
 
-Enemy::Enemy(int startX, int startY, SDL_Renderer* renderer) : renderer(renderer) {
+Enemy::Enemy(int startX, int startY, SDL_Renderer* renderer, int enemyIndex) : renderer(renderer) {
     textureManager = new TextureManager(renderer);
     x = startX;
     y = startY;
@@ -11,9 +11,6 @@ Enemy::Enemy(int startX, int startY, SDL_Renderer* renderer) : renderer(renderer
     height = TILE_SIZE;
     alive = true;
     direction = static_cast<Direction>(rand() % 4); // Random initial direction
-    enemy1 = textureManager->LoadTexture(ENEMY_1_SPRITESHEET);
-    enemy2 = textureManager->LoadTexture(ENEMY_2_SPRITESHEET);
-    enemy3 = textureManager->LoadTexture(ENEMY_3_SPRITESHEET);
     moveTimer = 120; // Change direction every 120 frames
     bombCooldown = 0;
     lastRetryTime = 0;
@@ -25,6 +22,13 @@ Enemy::Enemy(int startX, int startY, SDL_Renderer* renderer) : renderer(renderer
     lastFrameTime = 0;
     state = State::IDLE;
     direction = Direction::FRONT;
+
+    // Assign the correct texture based on the enemy index
+    switch (enemyIndex) {
+    case 0: texture = textureManager->LoadTexture(ENEMY_1_SPRITESHEET); break;
+    case 1: texture = textureManager->LoadTexture(ENEMY_2_SPRITESHEET); break;
+    case 2: texture = textureManager->LoadTexture(ENEMY_3_SPRITESHEET); break;
+    }
 }
 
 void Enemy::Update(TileManager& map, std::vector<Bomb>& bombs, SDL_Renderer* renderer) {
@@ -125,7 +129,7 @@ void Enemy::PlaceBomb(std::vector<Bomb>& bombs, SDL_Renderer* renderer, TileMana
         }
     }
 
-    if ((nearBreakable && (rand() % 100 < 60)) || (onFloorTile && (rand() % 100 < 30))) {
+    if ((nearBreakable && (rand() % 100 < 70)) || (onFloorTile && (rand() % 100 < 30))) {
         bombs.push_back(Bomb(bombX, bombY, renderer, map, Bomb::Entity::ENEMY));
     }
 }
@@ -134,7 +138,7 @@ void Enemy::Render(SDL_Renderer* renderer) {
     if (!alive) return;
     UpdateAnimation();
     SDL_Rect destRect = { x, y, TILE_SIZE, TILE_SIZE };
-    SDL_RenderCopy(renderer, enemy1, &srcRect, &destRect);
+    SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
 }
 
 void Enemy::Kill() {
@@ -167,12 +171,35 @@ bool Enemy::IsInBombRadius(int x, int y, std::vector<Bomb>& bombs) {
 
 void Enemy::EscapeFromBomb(TileManager& map, std::vector<Bomb>& bombs) {
     Uint32 currentTime = SDL_GetTicks();
-    if (currentTime - lastRetryTime < 400) {
-        return; // Try to escapse
+    if (currentTime - lastRetryTime < 300) {
+        return; // Don't change direction too often
     }
     lastRetryTime = currentTime;
 
     std::vector<int> safeDirections;
+    std::pair<int, int> bombPosition = { -1, -1 };
+
+    // Find the closest bomb
+    for (const auto& bomb : bombs) {
+        int bombX = bomb.GetRect().x / TILE_SIZE;
+        int bombY = bomb.GetRect().y / TILE_SIZE;
+        int radius = bomb.GetExplosionRadius();
+
+        int enemyX = x / TILE_SIZE;
+        int enemyY = y / TILE_SIZE;
+
+        if (enemyX == bombX && abs(enemyY - bombY) <= radius) {
+            bombPosition = { bombX, bombY };
+            break;
+        }
+        if (enemyY == bombY && abs(enemyX - bombX) <= radius) {
+            bombPosition = { bombX, bombY };
+            break;
+        }
+    }
+
+    int bestDirection = -1;
+    int maxDistance = -1;
 
     for (int i = 0; i < 4; i++) {
         int newX = x, newY = y;
@@ -185,16 +212,22 @@ void Enemy::EscapeFromBomb(TileManager& map, std::vector<Bomb>& bombs) {
 
         SDL_Rect newRect = { newX, newY, width, height };
         if (!map.CheckCollision(newRect) && !IsInBombRadius(newX, newY, bombs)) {
-            safeDirections.push_back(i); // Store safe movement options
+            int distance = std::abs(newX / TILE_SIZE - bombPosition.first) +
+                std::abs(newY / TILE_SIZE - bombPosition.second);
+
+            if (distance > maxDistance) {
+                maxDistance = distance;
+                bestDirection = i;
+            }
         }
     }
 
-    if (!safeDirections.empty()) {
-        direction = static_cast<Direction>(safeDirections[rand() % safeDirections.size()]); // Pick a random safe direction
+    if (bestDirection != -1) {
+        direction = static_cast<Direction>(bestDirection);
     }
     else {
-        // If trapped, keep retrying
-        direction = static_cast<Direction>(rand() % 4);
+        // If completely trapped, move randomly but try to avoid last direction
+        direction = static_cast<Direction>((rand() % 3 + (int)direction + 1) % 4);
     }
 }
 

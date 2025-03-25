@@ -58,4 +58,6 @@ constexpr const char* ENEMY_2_SPRITESHEET = "assets/spritesheet/cat_2_spriteshee
 constexpr const char* ENEMY_3_SPRITESHEET = "assets/spritesheet/cat_3_spritesheet.png";
 constexpr const int SPRITE_TILE = 32;
 
+// Level
+constexpr const char* LEVEL_FOLDER = "assets/level/";
 #endif

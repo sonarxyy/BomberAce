@@ -9,12 +9,14 @@
 #include "constants.hpp"
 #include "texture_manager.hpp"
 #include "bomb.hpp"
+#include "level_manager.hpp"
 
 class Bomb;
 
 class TileManager {
 public:
     TileManager(SDL_Renderer* renderer);
+    void LoadLevel(const LevelManager& levelManager);
     void LoadTexture();
     void Render(SDL_Renderer* renderer);
     bool CheckCollision(SDL_Rect& playerRect) const;
@@ -35,13 +37,14 @@ public:
 
 private:
     bool isRendered;
-    int map[MAP_ROWS][MAP_COLS];
-    int floorTextureIndex[MAP_ROWS][MAP_COLS];
-    int breakableTextureIndex[MAP_ROWS][MAP_COLS];
+    std::vector<std::vector<int>> map;
+    std::vector<std::vector<int>> floorTextureIndex;
+    std::vector<std::vector<int>> breakableTextureIndex;
     SDL_Renderer* renderer;
     TextureManager* textureManager;
     std::vector<SDL_Texture*> floorTextures;
     std::vector<SDL_Texture*> breakableTextures;
     std::vector<SDL_Texture*> unbreakableTextures;
+    LevelManager levelManager;
 };
 #endif
