@@ -1,17 +1,22 @@
 #include "in_game.hpp"
 
-InGame::InGame(SDL_Renderer* renderer) : renderer(renderer) {
+InGame::InGame(SDL_Renderer* renderer)
+    : renderer(renderer), levelManager(LEVEL_FOLDER) { // Initialize LevelManager
     textManager = new TextManager(renderer);
     textureManager = new TextureManager(renderer);
     audioManager = new AudioManager();
-    tileManager = new TileManager(renderer);
-    player = new Player(renderer, *tileManager);
+
+    tileManager = new TileManager(renderer, levelManager);
     level = 1;
     score = 0;
     hud = new HUD(renderer);
+    player = new Player(renderer, *tileManager);
+
+    // Initialize enemies
     enemies.push_back(Enemy(864, 48, renderer, 0));
     enemies.push_back(Enemy(48, 864, renderer, 1));
     enemies.push_back(Enemy(864, 864, renderer, 2));
+
     startTime = SDL_GetTicks();
     levelDuration = 150000;
 }
@@ -33,12 +38,12 @@ void InGame::HandleInputs(const Uint8* keyState) {
 }
 
 void InGame::Update() {
-    if (player->GetHealth() == 0) {
-        return; // Stop updating game objects if the player is dead
-    }
-
     Uint32 elapsedTime = SDL_GetTicks() - startTime;
     Uint32 remainingTime = (levelDuration > elapsedTime) ? (levelDuration - elapsedTime) : 0;
+
+    if (player->GetHealth() == 0 && remainingTime == 0) {
+        return; // Stop updating game objects if the player is dead or time reach 0;
+    }
 
     for (auto& enemy : enemies) {
         enemy.Update(*tileManager, bombs, renderer);
@@ -103,6 +108,10 @@ void InGame::Update() {
     explosions.erase(std::remove_if(explosions.begin(), explosions.end(), [](Explosion& ex) { return ex.IsExpired(); }), explosions.end());
 
     hud->Update(level, score, remainingTime, player->GetHealth());
+
+    if (enemies.empty()) {
+        NextLevel();
+    }
 }
 
 void InGame::Render() {
@@ -126,4 +135,27 @@ void InGame::Render() {
         explosion.Render(renderer); // Render explosion
     }
     hud->Render();
+}
+
+void InGame::NextLevel() {
+    FadeTransition::fade(renderer, false);
+    level++;
+    score = 0;
+
+    levelManager.NextLevel();
+
+    tileManager->LoadLevel(levelManager);
+
+    startTime = SDL_GetTicks();
+    bombs.clear();
+    explosions.clear();
+
+    player->Reset();
+
+    enemies.clear();
+    enemies.push_back(Enemy(864, 48, renderer, 0));
+    enemies.push_back(Enemy(48, 864, renderer, 1));
+    enemies.push_back(Enemy(864, 864, renderer, 2));
+
+    FadeTransition::fade(renderer, true);
 }

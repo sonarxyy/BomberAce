@@ -1,6 +1,6 @@
 #include "engine.hpp"
 
-Engine::Engine(const char* title, int posX, int posY, int screenWidth, int screenHeight, bool fullscreen) : window(nullptr), renderer(nullptr), music(nullptr), player(renderer, *tileManager), isRunning(false)
+Engine::Engine(const char* title, int posX, int posY, int screenWidth, int screenHeight, bool fullscreen) : window(nullptr), renderer(nullptr), music(nullptr), isRunning(false)
 {
 	Initialize(title, posX, posY, SCREEN_WIDTH, SCREEN_HEIGHT, fullscreen);
 }
@@ -31,9 +31,7 @@ bool Engine::Initialize(const char* title, int posX, int posY, int screenWidth, 
 	textureManager = new TextureManager(renderer);
 	audioManager = new AudioManager;
 	mainMenu = new MainMenu(renderer);
-	optionsMenu = new OptionsMenu(renderer);
 	inGame = new InGame(renderer);
-	tileManager = new TileManager(renderer);
 	return isRunning;
 }
 
@@ -67,9 +65,6 @@ void Engine::HandleEvents() {
 		case InMainMenu:
 			mainMenu->HandleInput(event);
 			break;
-		case InOptionsMenu:
-			optionsMenu->HandleInputs(event);
-			break;
 		case Playing:
 			keyState = SDL_GetKeyboardState(NULL); // For correct animation based on input for Player
 			inGame->HandleInputs(keyState);
@@ -94,9 +89,6 @@ void Engine::Update(float deltaTime) {
 	case InMainMenu:
 		mainMenu->UpdateSelectorPosition();
 		break;
-	case InOptionsMenu:
-		optionsMenu->Update();
-		break;
 	case Playing:
 		inGame->Update();
 		break;
@@ -106,7 +98,7 @@ void Engine::Update(float deltaTime) {
 	}
 
 	if (previousState != currentState) {
-		FadeTransition::fade(renderer, false); // Fade in after switching state
+		FadeTransition::fade(renderer, true); // Fade in after switching state
 		previousState = currentState; // Update stored state
 	}
 }
@@ -118,14 +110,8 @@ void Engine::Render() {
 		mainMenu->Render();
 		SDL_RenderPresent(renderer);
 		break;
-	case InOptionsMenu:
-		SDL_RenderClear(renderer);
-		optionsMenu->Render();
-		SDL_RenderPresent(renderer);
-		break;
 	case Playing:
 		SDL_RenderClear(renderer);
-		tileManager->Render(renderer);
 		inGame->Render();
 		SDL_RenderPresent(renderer);
 		break;
@@ -134,7 +120,6 @@ void Engine::Render() {
 
 void Engine::Clean() {
 	delete mainMenu;
-	delete optionsMenu;
 	delete inGame;
 	delete textureManager;
 	delete textMananger;

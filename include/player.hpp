@@ -19,7 +19,8 @@ private:
 	int x, y, width, height;
 	int speed;
 	int health;
-	bool canPlaceBomb;
+	int currentBombs;
+	int maxBombs;
 
 	// For SFX
 	AudioManager* audioManager;
@@ -54,7 +55,8 @@ public:
 	void SetPosition(int newX, int newY);
 	void PlaceBomb(std::vector<Bomb>& bombs, TileManager& map);
 	void GameOver();
-	void SetCanPlaceBomb();
+	void OnBombExploded();
+	void Reset();
 };
 
 #endif

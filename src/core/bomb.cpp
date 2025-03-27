@@ -79,7 +79,6 @@ void Bomb::Update(TileManager& map, Player& player, std::vector<Enemy>& enemies,
     if (!active) {
         Explode(map, player, enemies, explosions, renderer);
         map.SetTile(gridX, gridY, TileManager::TileType::FLOOR);
-        player.SetCanPlaceBomb();
     }
 }
 
@@ -144,9 +143,11 @@ void Bomb::Explode(TileManager& map, Player& player, std::vector<Enemy>& enemies
         }
     }
 
-    // **Delay destruction and kill enemy until update happens**
+    // Delay destruction and kill enemy until update happens
     enemyKilled = enemiesToKill;
     pendingDestroyedTiles = tilesToDestroy;
+
+    player.OnBombExploded();
 }
 
 

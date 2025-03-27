@@ -7,11 +7,9 @@ PowerUp::PowerUp(int x, int y, PowerUpType type) {
     rect = { x, y, TILE_SIZE, TILE_SIZE };
 }
 
-void PowerUp::render(SDL_Renderer* renderer) {
+void PowerUp::Render(SDL_Renderer* renderer) {
     switch (type) {
     case BOMB_RANGE: SDL_SetRenderDrawColor(renderer, 255, 69, 0, 255); break; // Orange
-    case FLAMETHROWER: SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); break; // Red
-    case LASER_GUN: SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255); break; // Blue
     case SPEED: SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); break; // Green
     case SHIELD: SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255); break; // Yellow
     case EXTRA_BOMBS: SDL_SetRenderDrawColor(renderer, 255, 20, 147, 255); break; // Pink
@@ -19,10 +17,10 @@ void PowerUp::render(SDL_Renderer* renderer) {
     SDL_RenderFillRect(renderer, &rect);
 }
 
-SDL_Rect PowerUp::getRect() const {
+SDL_Rect PowerUp::GetRect() const {
     return rect;
 }
 
-PowerUpType PowerUp::getType() const {
+PowerUpType PowerUp::GetType() const {
     return type;
 }

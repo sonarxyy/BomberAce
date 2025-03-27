@@ -1,7 +1,7 @@
 [![Static Badge](https://img.shields.io/badge/Ng%C3%B4n_ng%E1%BB%AF-Ti%E1%BA%BFng_Vi%E1%BB%87t-blue)](https://github.com/sonarxyy/ShapeDominance/blob/main/README-vi.md)
 
 
-# Shape Dominance
+# Bomber Ace
 Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/FrontPage).
 
 

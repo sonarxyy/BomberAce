@@ -3,7 +3,6 @@
 
 enum GameState {
     InMainMenu,
-    InOptionsMenu,
     Playing,
     Paused,
     GameOver,

@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project("BomberAce")
 
-add_executable("BomberAce" ${CMAKE_SOURCE_DIR}/src/main.cpp bomber_ace.rc)
+add_executable("BomberAce" WIN32 ${CMAKE_SOURCE_DIR}/src/main.cpp bomber_ace.rc)
 
 add_subdirectory(src/core)
 add_subdirectory(src/graphics)

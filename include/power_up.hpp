@@ -1,13 +1,11 @@
 #ifndef POWERUP_HPP
-#define POWERUP_HPp
+#define POWERUP_HPP
 
 #include <SDL.h>
 #include "constants.hpp"
 
 enum PowerUpType {
     BOMB_RANGE,
-    FLAMETHROWER,
-    LASER_GUN,
     SPEED,
     SHIELD,
     EXTRA_BOMBS
@@ -17,10 +15,9 @@ class PowerUp {
 public:
     PowerUp(int x, int y, PowerUpType type);
 
-    void render(SDL_Renderer* renderer);
-    SDL_Rect getRect() const;
-    PowerUpType getType() const;
-
+    void Render(SDL_Renderer* renderer);
+    SDL_Rect GetRect() const;
+    PowerUpType GetType() const;
 private:
     int x, y;
     PowerUpType type;

@@ -35,17 +35,11 @@ void MainMenu::CreateDisplay() {
 	startRect.x = 20; // Left aligned
 	startRect.y = SCREEN_HEIGHT / 2; // Start position
 
-	// Options
-	optionsTexture = textManager->CreateTextureFromText(font, "Options", WHITE);
-	SDL_QueryTexture(optionsTexture, NULL, NULL, &optionsRect.w, &optionsRect.h);
-	optionsRect.x = 20; // Left aligned
-	optionsRect.y = startRect.y + startRect.h + 5; // Spacing
-
 	// Quit
 	quitTexture = textManager->CreateTextureFromText(font, "Quit", WHITE);
 	SDL_QueryTexture(quitTexture, NULL, NULL, &quitRect.w, &quitRect.h);
 	quitRect.x = 20; // Left aligned
-	quitRect.y = optionsRect.y + optionsRect.h + 5; // Spacing
+	quitRect.y = startRect.y + startRect.h + 5; // Spacing
 
 	// Selector
 	selectorTexture = textureManager->LoadTexture(SELECTOR_TEXTURE_FILE);
@@ -55,7 +49,6 @@ void MainMenu::CreateDisplay() {
 
 	// Selected
 	selectedStartTexture = textManager->CreateTextureFromText(font, "Start Game", YELLOW);
-	selectedOptionsTexture = textManager->CreateTextureFromText(font, "Options", YELLOW);
 	selectedQuitTexture = textManager->CreateTextureFromText(font, "Quit", YELLOW);
 }
 
@@ -71,12 +64,8 @@ void MainMenu::HandleInput(SDL_Event& event) {
 				selectedOption = Quit;
 				audioManager->PlaySound(selectorSFX);
 				break;
-			case Options:
-				selectedOption = Start;
-				audioManager->PlaySound(selectorSFX);
-				break;
 			case Quit:
-				selectedOption = Options;
+				selectedOption = Start;
 				audioManager->PlaySound(selectorSFX);
 				break;
 			default:
@@ -87,10 +76,6 @@ void MainMenu::HandleInput(SDL_Event& event) {
 		case SDLK_s:
 			switch (selectedOption) {
 			case Start:
-				selectedOption = Options;
-				audioManager->PlaySound(selectorSFX);
-				break;
-			case Options:
 				selectedOption = Quit;
 				audioManager->PlaySound(selectorSFX);
 				break;
@@ -106,10 +91,6 @@ void MainMenu::HandleInput(SDL_Event& event) {
 			switch (selectedOption) {
 			case Start:
 				GameStateManager::setGameState(Playing);
-				audioManager->PlaySound(selectedSFX);
-				break;
-			case Options:
-				GameStateManager::setGameState(InOptionsMenu);
 				audioManager->PlaySound(selectedSFX);
 				break;
 			case Quit:
@@ -141,17 +122,6 @@ void MainMenu::HandleInput(SDL_Event& event) {
 				audioManager->PlaySound(selectedSFX);
 			}
 		}
-		else if (SDL_PointInRect(&mousePoint, &optionsRect)) {
-			if (selectedOption != Options) {
-				selectedOption = Options;
-				audioManager->PlaySound(selectorSFX);
-				animationTimer = 0;
-			}
-			if (event.type == SDL_MOUSEBUTTONDOWN) {
-				GameStateManager::setGameState(InOptionsMenu);
-				audioManager->PlaySound(selectedSFX);
-			}
-		}
 		else if (SDL_PointInRect(&mousePoint, &quitRect)) {
 			if (selectedOption != Quit) {
 				selectedOption = Quit;
@@ -172,12 +142,8 @@ void MainMenu::HandleInput(SDL_Event& event) {
 				selectedOption = Quit;
 				audioManager->PlaySound(selectorSFX);
 				break;
-			case Options:
-				selectedOption = Start;
-				audioManager->PlaySound(selectorSFX);
-				break;
 			case Quit:
-				selectedOption = Options;
+				selectedOption = Start;
 				audioManager->PlaySound(selectorSFX);
 				break;
 			default:
@@ -187,10 +153,6 @@ void MainMenu::HandleInput(SDL_Event& event) {
 		else if (event.wheel.y < 0) { // Scroll down
 			switch (selectedOption) {
 			case Start:
-				selectedOption = Options;
-				audioManager->PlaySound(selectorSFX);
-				break;
-			case Options:
 				selectedOption = Quit;
 				audioManager->PlaySound(selectorSFX);
 				break;
@@ -210,9 +172,6 @@ void MainMenu::UpdateSelectorPosition() {
 	switch (selectedOption) {
 	case Start:
 		selectedRect = &startRect;
-		break;
-	case Options:
-		selectedRect = &optionsRect;
 		break;
 	case Quit:
 		selectedRect = &quitRect;
@@ -239,23 +198,10 @@ void MainMenu::Render() {
 		animatedRect = startRect;
 		animatedRect.y += offset;
 		SDL_RenderCopy(renderer, selectedStartTexture, NULL, &animatedRect);
-
-		SDL_RenderCopy(renderer, optionsTexture, NULL, &optionsRect);
-		SDL_RenderCopy(renderer, quitTexture, NULL, &quitRect);
-		break;
-	case Options:
-		SDL_RenderCopy(renderer, startTexture, NULL, &startRect);
-
-		animatedRect = optionsRect;
-		animatedRect.y += offset;
-		SDL_RenderCopy(renderer, selectedOptionsTexture, NULL, &animatedRect);
-
 		SDL_RenderCopy(renderer, quitTexture, NULL, &quitRect);
 		break;
 	case Quit:
 		SDL_RenderCopy(renderer, startTexture, NULL, &startRect);
-		SDL_RenderCopy(renderer, optionsTexture, NULL, &optionsRect);
-
 		animatedRect = quitRect;
 		animatedRect.y += offset;
 		SDL_RenderCopy(renderer, selectedQuitTexture, NULL, &animatedRect);

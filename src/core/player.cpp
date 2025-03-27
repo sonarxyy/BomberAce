@@ -13,8 +13,11 @@ Player::Player(SDL_Renderer* renderer, TileManager& map) : renderer(renderer) {
     srcRect = { x , y, width, height };
     destRect = { x , y, width, height };
     health = 3;
+    currentBombs = 0;
+    maxBombs = 1;
+    
     playerTexture = IMG_LoadTexture(renderer, PLAYER_SPRITESHEET);
-    canPlaceBomb = true;
+    gameoverBackground = IMG_LoadTexture(renderer, GAMEOVER_BACKGROUND);
 
     // SFX
     lastPlayTime = 0;
@@ -147,8 +150,8 @@ void Player::SetPosition(int newX, int newY) {
 }
 
 void Player::PlaceBomb(std::vector<Bomb>& bombs, TileManager& map) {
-    if (!canPlaceBomb) {
-        return;
+    if (currentBombs >= maxBombs) {
+        return;  // Don't place a bomb if max is reached
     }
 
     int bombX = (x / TILE_SIZE) * TILE_SIZE;
@@ -157,14 +160,13 @@ void Player::PlaceBomb(std::vector<Bomb>& bombs, TileManager& map) {
     // Ensure no bomb exists at this location
     for (const auto& bomb : bombs) {
         if (bomb.GetRect().x == bombX && bomb.GetRect().y == bombY) {
-            return; // Don't place bomb if one already exists
+            return;  // Don't place bomb if one already exists in this position
         }
     }
 
-    // Place a new bomb only if there's no existing one
+    // Place the bomb and increase the counter
     bombs.push_back(Bomb(bombX, bombY, renderer, map, Bomb::Entity::PLAYER));
-
-    canPlaceBomb = false;
+    currentBombs++;
 }
 
 void Player::GameOver() {
@@ -173,6 +175,18 @@ void Player::GameOver() {
     SDL_RenderCopy(renderer, gameoverBackground, NULL, NULL);
 }
 
-void Player::SetCanPlaceBomb() {
-    canPlaceBomb = true;
+void Player::OnBombExploded() {
+    if (currentBombs > 0) {
+        currentBombs--;  // Reduce bomb count when a bomb explodes
+    }
+}
+
+void Player::Reset() {
+    x = 48;
+    y = 48;
+    health = 3;
+    currentBombs = 0;
+    maxBombs = 1;
+    state = State::IDLE;
+    direction = Direction::FRONT;
 }

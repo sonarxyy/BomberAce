@@ -1,14 +1,8 @@
 #include "tile_manager.hpp"
 
-TileManager::TileManager(SDL_Renderer* renderer) : renderer(renderer), levelManager(LEVEL_FOLDER) {
+TileManager::TileManager(SDL_Renderer* renderer, const LevelManager& levelManager) : renderer(renderer) {
     textureManager = new TextureManager(renderer);
     isRendered = false;
-    /*
-    * Map Layout
-    * 0: Moveable
-    * 1: Unbreakable
-    * 2: Breakable
-    */
     LoadTexture();
     LoadLevel(levelManager);
 }
@@ -16,7 +10,11 @@ TileManager::TileManager(SDL_Renderer* renderer) : renderer(renderer), levelMana
 void TileManager::LoadLevel(const LevelManager& levelManager) {
     const auto& level = levelManager.getMap();
 
-    // Ensure map dimensions match
+    // Ensure we clear the old level data before loading a new one
+    map.clear();
+    floorTextureIndex.clear();
+    breakableTextureIndex.clear();
+
     int rows = MAP_ROWS;
     int cols = MAP_COLS;
 
@@ -28,10 +26,9 @@ void TileManager::LoadLevel(const LevelManager& levelManager) {
         for (int col = 0; col < cols; col++) {
             map[row][col] = level[row][col];
 
-            // Assign random floor texture
+            // Assign new textures for the new level
             floorTextureIndex[row][col] = rand() % floorTextures.size();
 
-            // If breakable, assign random breakable texture
             if (map[row][col] == static_cast<int>(TileType::BREAKABLE)) {
                 breakableTextureIndex[row][col] = rand() % breakableTextures.size();
             }

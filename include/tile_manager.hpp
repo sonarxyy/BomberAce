@@ -15,7 +15,7 @@ class Bomb;
 
 class TileManager {
 public:
-    TileManager(SDL_Renderer* renderer);
+    TileManager(SDL_Renderer* renderer, const LevelManager& levelManager);
     void LoadLevel(const LevelManager& levelManager);
     void LoadTexture();
     void Render(SDL_Renderer* renderer);
@@ -45,6 +45,5 @@ private:
     std::vector<SDL_Texture*> floorTextures;
     std::vector<SDL_Texture*> breakableTextures;
     std::vector<SDL_Texture*> unbreakableTextures;
-    LevelManager levelManager;
 };
 #endif

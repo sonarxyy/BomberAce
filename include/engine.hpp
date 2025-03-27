@@ -6,7 +6,6 @@
 #include <SDL_mixer.h>
 #include "in_game.hpp"
 #include "main_menu.hpp"
-#include "options_menu.hpp"
 #include "constants.hpp"
 #include "text_manager.hpp"
 #include "texture_manager.hpp"
@@ -38,10 +37,7 @@ private:
 	TextManager* textMananger;
 	AudioManager* audioManager;
 	MainMenu* mainMenu;
-	OptionsMenu* optionsMenu;
 	InGame* inGame;
-	TileManager* tileManager;
-	Player player;
 
 	const Uint8* keyState;
 

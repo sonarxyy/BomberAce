@@ -35,9 +35,6 @@ private:
     SDL_Texture* startTexture;
     SDL_Rect startRect;
 
-    SDL_Texture* optionsTexture;
-    SDL_Rect optionsRect;
-
     SDL_Texture* quitTexture;
     SDL_Rect quitRect;
 
