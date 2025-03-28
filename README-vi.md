@@ -2,7 +2,15 @@
 
 
 # Bomber Ace
-Một dự án trò chơi nhỏ được viết bằng C++ dựa trên thư viện [SDL2](https://wiki.libsdl.org/SDL2/FrontPage).
+Một dự án trò chơi nhỏ được viết bằng C++ dựa trên thư viện [SDL2](https://wiki.libsdl.org/SDL2/FrontPage).  
+![Bomber Ace](assets/image/mainmenubackground.png)
+
+
+# Giới thiệu và hướng dẫn
+[Thử nghiệm trò chơi](https://drive.google.com/file/d/1ExSnyQ_f-JOOmIt2xztoPsnXncyxaZn2/view?usp=sharing)  
+Bạn đóng vai là một chú mèo xiêm, nhiệm vụ của bạn là đánh bại những chú mèo khác để giành được chiến thắng bằng cách đặt những quả bom và nhặt những vật phẩm tăng cường sức mạnh.  
+Sử dụng các nút (W, A, S, D) hoặc phím mũi tên để lên trên, sang trái, sang phải, xuống dưới
+Sử dụng phím cách để đặt bom.
 
 
 # Các lớp quản lý chính của trò chơi
@@ -46,7 +54,7 @@ Một dự án trò chơi nhỏ được viết bằng C++ dựa trên thư vi�
   - Lấy kiểu ô ở vị trí chỉ định.
 
 
-# Lớp không thể thiếu của trò chơi.
+# Lớp không thể thiếu của trò chơi
 - Bomb: Kaboom!
   - Nạp vào đồ họa của bom.
   - Cập nhật trạng thái của bom.
@@ -61,6 +69,7 @@ Một dự án trò chơi nhỏ được viết bằng C++ dựa trên thư vi�
   - Nạp vào đồ họa của vụ nổ.
   - Cập nhật trạng thái vụ nổ (trước khi nổ, sau khi nổ).
   - Kết xuất vụ nổ.
+  - Kiểm tra nếu vụ nổ đã kết thúc.
 - Fade transition: Cho trải nghiệm mượt mà hơn.
   - Hiệu ứng chuyển cảnh fade in, fade out cho trò chơi.
 - HUD: Head-up display
@@ -84,6 +93,19 @@ Một dự án trò chơi nhỏ được viết bằng C++ dựa trên thư vi�
   - Có thể mất máu.
   - Trò chơi kết thúc khi máu giảm về 0.
 - Power-ups:
+  - Bomb Range: Tăng phạm vi nổ.
+  - Extra Bomb: Có thể đặt thêm bom (tối đa 3 quả).
+  - Shield: Thêm máu (tối đa 3 máu).
+  - Speed: Tăng 2 tốc độ (tối đa 8).
+
+
+|                     Đồ họa                     |     Tên    |                    Chức năng                   |
+|:----------------------------------------------:|:----------:|:----------------------------------------------:|
+|    ![Bomb](assets/animations/bomb/bomb0.png)   |    Bomb    |       Tạo vùng nổ với bán kính chỉ định.       |
+| ![Bomb Range](assets/power-ups/bomb_range.png) | Bomb Range |             Tăng 1 bán kính vụ nổ.             |
+| ![Extra Bomb](assets/power-ups/extra_bomb.png) | Extra Bomb | Tăng số lượng bom có thể đặt trước khi bom nổ. |
+|     ![Shield](assets/power-ups/shield.png)     |   Shield   |            Thêm mạng cho người chơi.           |
+|      ![Speed](assets/power-ups/speed.png)      |    Speed   |                 Tăng 2 tốc độ.                 |
 
 
 # Xây dựng và cài đặt
@@ -114,13 +136,14 @@ Trong thư mục vừa clone, chạy install.bat. Sau khi cài đặt xong, ch�
 
 
 # Nguồn
-|                              Tác giả                              |             Tài sản            |
-|:-----------------------------------------------------------------:|:------------------------------:|
-|  [Gemini Imagen3](https://deepmind.google/technologies/imagen-3/) |            Main menu           |
-|                   [bigjpg](https://bigjpg.com/)                   |        Phóng tỏ hình ảnh       |
-|           [Netherzapdos](https://netherzapdos.itch.io/)           | Đồ họa của người chơi, kẻ địch |
-|                 [Kenney](https://kenney.nl/assets)                |        Hiệu ứng âm thanh       |
-|      [Caz Creates Games](https://caz-creates-games.itch.io/)      |         Đồ họa của bom         |
-|            [JAR Incorporated](https://jarinc.itch.io/)            |         Đồ họa trái tim        |
-|               [CodeManu](https://codemanu.itch.io/)               |       Hiệu ứng nổ của bom      |
-| [Raymond Larabie](https://www.dafont.com/profile.php?user=137418) |         Phông chữ Xirod        |
+|                              Tác giả                              |              Tài sản             |
+|:-----------------------------------------------------------------:|:--------------------------------:|
+|  [Gemini Imagen3](https://deepmind.google/technologies/imagen-3/) | Main menu, Chiến thắng, Thất bại |
+|                   [bigjpg](https://bigjpg.com/)                   |         Phóng to hình ảnh        |
+|           [Netherzapdos](https://netherzapdos.itch.io/)           |  Đồ họa của người chơi, kẻ địch  |
+|                 [Kenney](https://kenney.nl/assets)                |         Hiệu ứng âm thanh        |
+|      [Caz Creates Games](https://caz-creates-games.itch.io/)      |          Đồ họa của bom          |
+|            [JAR Incorporated](https://jarinc.itch.io/)            |          Đồ họa trái tim         |
+|               [CodeManu](https://codemanu.itch.io/)               |        Hiệu ứng nổ của bom       |
+| [Raymond Larabie](https://www.dafont.com/profile.php?user=137418) |          Phông chữ Xirod         |
+|        [GameSupplyGuy](https://itch.io/profile/gamesupply)        |      Vật phẩm tăng sức mạnh      |

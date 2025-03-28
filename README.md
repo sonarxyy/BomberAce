@@ -2,7 +2,15 @@
 
 
 # Bomber Ace
-Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/FrontPage).
+Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/FrontPage).  
+![Bomber Ace](assets/image/mainmenubackground.png)
+
+
+# Introduction and tutorial
+[Demo](https://drive.google.com/file/d/1ExSnyQ_f-JOOmIt2xztoPsnXncyxaZn2/view?usp=sharing)  
+In this game, you will become a siamese cat, your mission is to defeat other cats by placing bombs and pick up power-ups.  
+Press W, A, S, D or arrow keys to move up, left, right, down.  
+Press space to place bomb.
 
 
 # Game Manager Class Components
@@ -46,7 +54,7 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
   - Get tile type at designated position.
 
 
-# Indispensible class of the game.
+# Indispensible class of the game
 - Bomb: Kaboom!
   - Load texture of the bomb.
   - Update status of the bomb.
@@ -85,6 +93,19 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
   - Can take damage.
   - Game over when healh point deducted to 0.
 - Power-ups:
+  - Bomb Range: Add explosion radius.
+  - Extra Bomb: Can place more bombs (max at 3).
+  - Shield: Add more lives (max at 3).
+  - Speed: Increase speed by 2 (max at 8).
+
+
+|                     Texture                    |    Name    |                            Function                            |
+|:----------------------------------------------:|:----------:|:--------------------------------------------------------------:|
+|    ![Bomb](assets/animations/bomb/bomb0.png)   |    Bomb    | Create an explosion damage everything in its explosion radius. |
+| ![Bomb Range](assets/power-ups/bomb_range.png) | Bomb Range |                 Increase explosion radius by 1.                |
+| ![Extra Bomb](assets/power-ups/extra_bomb.png) | Extra Bomb |   Increase the number of bombs can be placed before exploded.  |
+|     ![Shield](assets/power-ups/shield.png)     |   Shield   |                    Add more lives to player.                   |
+|      ![Speed](assets/power-ups/speed.png)      |    Speed   |                      Increase speed by 2.                      |
 
 
 # Build and Installation
@@ -117,11 +138,12 @@ Inside cloned directory, run install.bat. After installation is done, run build.
 # Credits
 |                               Author                              |              Assets             |
 |:-----------------------------------------------------------------:|:-------------------------------:|
-|  [Gemini Imagen3](https://deepmind.google/technologies/imagen-3/) |            Main Menu            |
+|  [Gemini Imagen3](https://deepmind.google/technologies/imagen-3/) |  Main Menu, Game Over, Victory  |
 |                   [bigjpg](https://bigjpg.com/)                   |          Upscale Image          |
-|           [Netherzapdos](https://netherzapdos.itch.io/)           | Player's sprite, enemy's sprite |
+|           [Netherzapdos](https://netherzapdos.itch.io/)           | Player's sprite, Enemy's sprite |
 |                 [Kenney](https://kenney.nl/assets)                |               SFX               |
 |      [Caz Creates Games](https://caz-creates-games.itch.io/)      |            Bomb's VFX           |
 |            [JAR Incorporated](https://jarinc.itch.io/)            |         Heart's textures        |
 |               [CodeManu](https://codemanu.itch.io/)               |       Explosion's textures      |
 | [Raymond Larabie](https://www.dafont.com/profile.php?user=137418) |           Xirod's font          |
+|        [GameSupplyGuy](https://itch.io/profile/gamesupply)        |        Power-ups textures       |
