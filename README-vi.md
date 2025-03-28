@@ -9,7 +9,7 @@ Một dự án trò chơi nhỏ được viết bằng C++ dựa trên thư vi�
 # Giới thiệu và hướng dẫn
 [Thử nghiệm trò chơi](https://drive.google.com/file/d/1ExSnyQ_f-JOOmIt2xztoPsnXncyxaZn2/view?usp=sharing)  
 Bạn đóng vai là một chú mèo xiêm, nhiệm vụ của bạn là đánh bại những chú mèo khác để giành được chiến thắng bằng cách đặt những quả bom và nhặt những vật phẩm tăng cường sức mạnh.  
-Sử dụng các nút (W, A, S, D) hoặc phím mũi tên để lên trên, sang trái, sang phải, xuống dưới
+Sử dụng các nút (W, A, S, D) hoặc phím mũi tên để lên trên, sang trái, sang phải, xuống dưới.  
 Sử dụng phím cách để đặt bom.
 
 
