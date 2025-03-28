@@ -2,8 +2,10 @@
 #define PLAYER_HPP
 
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include "tile_manager.hpp"
 #include "bomb.hpp"
+#include "text_manager.hpp"
 #include "texture_manager.hpp"
 #include "audio_manager.hpp"
 #include "constants.hpp"
@@ -21,6 +23,7 @@ private:
 	int health;
 	int currentBombs;
 	int maxBombs;
+	int explosionRadius;
 
 	// For SFX
 	AudioManager* audioManager;
@@ -42,6 +45,9 @@ private:
 
 	// Game over
 	SDL_Texture* gameoverBackground;
+	TTF_Font* font;
+	TextManager* textManager;
+	
 
 public:
 	Player(SDL_Renderer* renderer, TileManager& map);
@@ -57,6 +63,9 @@ public:
 	void GameOver();
 	void OnBombExploded();
 	void Reset();
+	void CollectPowerUp(TileManager& map);
+	int GetExplosionRadius() const;
+	void SetHealth(int health);
 };
 
 #endif

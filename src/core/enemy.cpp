@@ -9,6 +9,7 @@ Enemy::Enemy(int startX, int startY, SDL_Renderer* renderer, int enemyIndex) : r
     speed = TILE_SIZE / 12;
     width = TILE_SIZE;
     height = TILE_SIZE;
+    explosionRadius = 1;
     alive = true;
     direction = static_cast<Direction>(rand() % 4); // Random initial direction
     moveTimer = 120; // Change direction every 120 frames
@@ -62,6 +63,7 @@ void Enemy::Update(TileManager& map, std::vector<Bomb>& bombs, SDL_Renderer* ren
         }
     }
 
+    CollectPowerUp(map);
     moved ? state = State::WALKING : state = State::IDLE;
 
     if (--moveTimer <= 0) {
@@ -72,9 +74,9 @@ void Enemy::Update(TileManager& map, std::vector<Bomb>& bombs, SDL_Renderer* ren
     if (bombCooldown > 0) {
         bombCooldown--;
     }
-    else if (rand() % 100 < 10) {
+    else {
         PlaceBomb(bombs, renderer, map);
-        bombCooldown = 300;
+        bombCooldown = 180;
     }
 }
 
@@ -84,7 +86,39 @@ void Enemy::ChooseDirection(TileManager& map, std::vector<Bomb>& bombs) {
         return;
     }
 
-    // Move randomly but ensure moving at least 2 tiles in one direction
+    // Check if there's a power-up nearby
+    PowerUp* nearestPowerUp = nullptr;
+    int nearestDist = INT_MAX;
+
+    for (auto& powerUp : map.GetPowerUps()) {
+        int powerUpX = powerUp.GetRect().x / TILE_SIZE;
+        int powerUpY = powerUp.GetRect().y / TILE_SIZE;
+        int enemyX = x / TILE_SIZE;
+        int enemyY = y / TILE_SIZE;
+
+        int distance = abs(powerUpX - enemyX) + abs(powerUpY - enemyY);
+        if (distance < nearestDist && distance <= 2) { // Limit to 2 tiles away
+            nearestDist = distance;
+            nearestPowerUp = &powerUp;
+        }
+    }
+
+    if (nearestPowerUp) {
+        // Move toward the power-up
+        int powerUpX = nearestPowerUp->GetRect().x / TILE_SIZE;
+        int powerUpY = nearestPowerUp->GetRect().y / TILE_SIZE;
+        int enemyX = x / TILE_SIZE;
+        int enemyY = y / TILE_SIZE;
+
+        if (powerUpX > enemyX) direction = Direction::RIGHT;
+        else if (powerUpX < enemyX) direction = Direction::LEFT;
+        else if (powerUpY > enemyY) direction = Direction::FRONT;
+        else if (powerUpY < enemyY) direction = Direction::BACK;
+
+        return;
+    }
+
+    // If no power-up is found, continue moving randomly
     static int moveCounter = 0;
     if (moveCounter < 2) {
         moveCounter++;
@@ -107,18 +141,18 @@ void Enemy::PlaceBomb(std::vector<Bomb>& bombs, SDL_Renderer* renderer, TileMana
     }
 
     bool nearBreakable = false;
-    bool onFloorTile = (map.GetTileTypeAt(bombX, bombY) == TileManager::TileType::GRASS || map.GetTileTypeAt(bombX, bombY) == TileManager::TileType::SNOW);
+    bool onFloorTile = (map.GetTileTypeAt(bombX, bombY) == TileManager::TileType::FLOOR);
 
     // Check adjacent tiles for breakable walls
     for (int i = 0; i < 4; i++) {
         int checkX = bombX / TILE_SIZE;
-        int checkY = bombX / TILE_SIZE;
+        int checkY = bombY / TILE_SIZE;
 
         switch (i) {
-            case 0: checkY -= 1; break; // UP
-            case 1: checkY += 1; break; // DOWN
-            case 2: checkX -= 1; break; // LEFT
-            case 3: checkX += 1; break; // RIGHT
+        case 0: checkY -= 1; break; // UP
+        case 1: checkY += 1; break; // DOWN
+        case 2: checkX -= 1; break; // LEFT
+        case 3: checkX += 1; break; // RIGHT
         }
 
         TileManager::TileType tileType = map.GetTileTypeAt(checkX * TILE_SIZE, checkY * TILE_SIZE);
@@ -129,8 +163,25 @@ void Enemy::PlaceBomb(std::vector<Bomb>& bombs, SDL_Renderer* renderer, TileMana
         }
     }
 
-    if ((nearBreakable && (rand() % 100 < 70)) || (onFloorTile && (rand() % 100 < 30))) {
-        bombs.push_back(Bomb(bombX, bombY, renderer, map, Bomb::Entity::ENEMY));
+    if ((nearBreakable && (rand() % 100 < 80)) || (onFloorTile && (rand() % 100 < 40))) {
+        bombs.emplace_back(bombX, bombY, renderer, map, Bomb::Entity::ENEMY, explosionRadius);
+
+        // After placing a bomb, check for power-ups and move toward them if any exist
+        for (auto& powerUp : map.GetPowerUps()) {
+            int powerUpX = powerUp.GetRect().x / TILE_SIZE;
+            int powerUpY = powerUp.GetRect().y / TILE_SIZE;
+            int enemyX = x / TILE_SIZE;
+            int enemyY = y / TILE_SIZE;
+
+            int distance = abs(powerUpX - enemyX) + abs(powerUpY - enemyY);
+            if (distance <= 2) { // Prioritize power-ups within 2 tiles
+                if (powerUpX > enemyX) direction = Direction::RIGHT;
+                else if (powerUpX < enemyX) direction = Direction::LEFT;
+                else if (powerUpY > enemyY) direction = Direction::FRONT;
+                else if (powerUpY < enemyY) direction = Direction::BACK;
+                return;
+            }
+        }
     }
 }
 
@@ -250,4 +301,31 @@ void Enemy::UpdateAnimation() {
     if (state == State::WALKING) row = 1;
 
     srcRect = { (startCol + frame) * SPRITE_TILE, row * SPRITE_TILE, SPRITE_TILE, SPRITE_TILE };
+}
+
+void Enemy::CollectPowerUp(TileManager& map) {
+    int tileX = x / TILE_SIZE;
+    int tileY = y / TILE_SIZE;
+
+    for (auto& powerUp : map.GetPowerUps()) {
+        SDL_Rect powerUpRect = powerUp.GetRect();
+        SDL_Rect enemyRect = GetRect();
+        if (SDL_HasIntersection(&powerUpRect, &enemyRect)) {
+            switch (powerUp.GetType()) {
+            case BOMB_RANGE:
+                explosionRadius++;
+                break;
+            case SPEED:
+                if (speed <= TILE_SIZE / 6) { speed += 2; } // Limit max speed
+                break;
+            case SHIELD:
+                break;
+            case EXTRA_BOMBS:
+                break;
+            }
+
+            map.RemovePowerUpAt(tileX * TILE_SIZE, tileY * TILE_SIZE);
+            break;
+        }
+    }
 }

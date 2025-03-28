@@ -4,24 +4,19 @@
 std::vector<SDL_Texture*> Bomb::sharedBombTextures;
 int Bomb::nextExplosionId = 0;
 
-Bomb::Bomb(int px, int py, SDL_Renderer* renderer, TileManager& map, const Entity& owner) : ownerType(owner) {
+Bomb::Bomb(int px, int py, SDL_Renderer* renderer, TileManager& map, Entity owner, int ownerExplosionRadius)
+    : ownerType(owner), explosionRadius(ownerExplosionRadius) {
     textureManager = new TextureManager(renderer);
-    x = (px / TILE_SIZE) * TILE_SIZE; // Align to grid
+    x = (px / TILE_SIZE) * TILE_SIZE;
     y = (py / TILE_SIZE) * TILE_SIZE;
-    timer = 3000; // 3 seconds before explosion
-    frameDelay = 90; // For bomb animation
+    timer = 3000;
+    frameDelay = 90;
     startTime = SDL_GetTicks();
     lastFrameTime = SDL_GetTicks();
     active = true;
     currentFrame = 0;
-    explosionRadius = 1;
+
     LoadTexture(renderer);
-
-    playerOnBomb = true; // Player starts on the bomb
-    enemyOnBomb = true;  // Any enemy starts on the bomb
-
-    // For score calculation
-    explosionId = nextExplosionId++;
 }
 
 void Bomb::LoadTexture(SDL_Renderer* renderer) {
@@ -109,6 +104,8 @@ void Bomb::Explode(TileManager& map, Player& player, std::vector<Enemy>& enemies
     }
 
     // Create explosions in 4 directions
+    bool stopRight = false, stopLeft = false, stopDown = false, stopUp = false;
+
     for (int i = 1; i <= explosionRadius; i++) {
         std::vector<std::pair<int, int>> explosionTiles = {
             {gridX + i, gridY}, // Right
@@ -117,31 +114,44 @@ void Bomb::Explode(TileManager& map, Player& player, std::vector<Enemy>& enemies
             {gridX, gridY - i}  // Up
         };
 
-        for (auto& tile : explosionTiles) {
-            int ex = tile.first * TILE_SIZE;
-            int ey = tile.second * TILE_SIZE;
+        for (int dir = 0; dir < 4; dir++) {
+            int ex = explosionTiles[dir].first * TILE_SIZE;
+            int ey = explosionTiles[dir].second * TILE_SIZE;
 
-            if (!map.IsWall(tile.first, tile.second)) {
-                // Store for later destruction
-                tilesToDestroy.push_back(tile);
+            // Stop explosion if a wall is encountered
+            if (dir == 0 && stopRight) continue;
+            if (dir == 1 && stopLeft) continue;
+            if (dir == 2 && stopDown) continue;
+            if (dir == 3 && stopUp) continue;
 
-                // Add explosion effect
-                explosions.push_back(Explosion(ex, ey, renderer, explosionId));
-                explosionRect = { ex, ey, TILE_SIZE, TILE_SIZE };
+            if (map.IsWall(explosionTiles[dir].first, explosionTiles[dir].second)) {
+                if (dir == 0) stopRight = true;
+                if (dir == 1) stopLeft = true;
+                if (dir == 2) stopDown = true;
+                if (dir == 3) stopUp = true;
+                continue; // Do NOT create an explosion here
+            }
 
-                if (CheckCollision(explosionRect, player.GetRect()) && !playerHit) {
-                    player.TakeDamage();
-                    playerHit = true;
-                }
+            // Store for later destruction
+            tilesToDestroy.push_back(explosionTiles[dir]);
 
-                for (Enemy& enemy : enemies) {
-                    if (std::find(enemiesToKill.begin(), enemiesToKill.end(), &enemy) == enemiesToKill.end() && CheckCollision(explosionRect, enemy.GetRect())) {
-                        enemiesToKill.push_back(&enemy);
-                    }
+            // Add explosion effect
+            explosions.push_back(Explosion(ex, ey, renderer, explosionId));
+            SDL_Rect explosionRect = { ex, ey, TILE_SIZE, TILE_SIZE };
+
+            if (CheckCollision(explosionRect, player.GetRect()) && !playerHit) {
+                player.TakeDamage();
+                playerHit = true;
+            }
+
+            for (Enemy& enemy : enemies) {
+                if (std::find(enemiesToKill.begin(), enemiesToKill.end(), &enemy) == enemiesToKill.end() && CheckCollision(explosionRect, enemy.GetRect())) {
+                    enemiesToKill.push_back(&enemy);
                 }
             }
         }
     }
+
 
     // Delay destruction and kill enemy until update happens
     enemyKilled = enemiesToKill;

@@ -15,6 +15,7 @@ public:
         FLOOR = 0,
         WALL = 1,
         BREAKABLE = 2,
+        POWER_UP = 9
     };
 
     LevelManager(const std::string& levelFolder);
@@ -25,6 +26,7 @@ public:
 
     const std::vector<std::vector<int>>& getMap() const;
     bool IsLastLevel() const;
+    void ReloadLevel();
 
 private:
     std::vector<std::vector<int>> map;  // Current level map

@@ -11,7 +11,7 @@
 #include "audio_manager.hpp"
 #include "tile_manager.hpp"
 #include "level_manager.hpp"
-#include "fade_transition.hpp";
+#include "fade_transition.hpp"
 #include "player.hpp"
 #include "bomb.hpp"
 #include "enemy.hpp"
@@ -27,6 +27,9 @@ public:
 	void Update();
 	void Render();
 	void NextLevel();
+	void RestartLevel();
+	void RestartGame();
+	void RenderGameOverScreen();
 
 private:
 	SDL_Renderer* renderer;
@@ -46,6 +49,7 @@ private:
 	int score;
 	Uint32 startTime;
 	Uint32 levelDuration;
+	Uint32 remainingTime;
 };
 
 #endif

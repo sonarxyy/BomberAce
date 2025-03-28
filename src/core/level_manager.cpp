@@ -54,10 +54,10 @@ void LevelManager::LoadLevel(const std::string& filename) {
             case '2': 
                 row.push_back(BREAKABLE); 
                 break;
-            /*case 'U':
+            case 'U':
             case 'u':
-                row.push_back(POWERUP); 
-                break;*/
+                row.push_back(POWER_UP); 
+                break;
             case ' ': break;
             default:
                 std::cerr << "Error: Invalid character '" << c << "' in level file: " << filename << std::endl;
@@ -86,13 +86,13 @@ void LevelManager::LoadLevel(const std::string& filename) {
 }
 
 void LevelManager::NextLevel() {
-    if (currentLevelIndex + 1 < levelFiles.size()) {
-        currentLevelIndex++;
-        LoadLevel(levelFiles[currentLevelIndex]);
+    if (currentLevelIndex >= levelFiles.size()) {
+        std::cout << "All levels completed! No more levels to load." << std::endl;
+        return;
     }
-    else {
-        std::cout << "All levels completed!" << std::endl;
-    }
+
+    currentLevelIndex++;
+    LoadLevel(levelFiles[currentLevelIndex]);
 }
 
 const std::vector<std::vector<int>>& LevelManager::getMap() const {
@@ -101,4 +101,13 @@ const std::vector<std::vector<int>>& LevelManager::getMap() const {
 
 bool LevelManager::IsLastLevel() const {
     return currentLevelIndex >= levelFiles.size() - 1;
+}
+
+void LevelManager::ReloadLevel() {
+    if (!levelFiles.empty()) {
+        LoadLevel(levelFiles[currentLevelIndex]);
+    }
+    else {
+        std::cerr << "Error: No levels available to reload!" << std::endl;
+    }
 }

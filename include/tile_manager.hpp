@@ -6,9 +6,11 @@
 #include <SDL.h>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "constants.hpp"
 #include "texture_manager.hpp"
 #include "bomb.hpp"
+#include "power_up.hpp"
 #include "level_manager.hpp"
 
 class Bomb;
@@ -22,6 +24,7 @@ public:
     bool CheckCollision(SDL_Rect& playerRect) const;
     bool IsWall(int col, int row) const;
     bool DestroyTile(int col, int row);
+    std::vector<PowerUp> GetPowerUps();
 
     // For sound effect
     enum class TileType {
@@ -30,10 +33,16 @@ public:
         BREAKABLE,
         GRASS,
         SNOW,
-        BOMB
+        BOMB,
+        POWER_UP = 9,
+        BOMB_RANGE,
+        SPEED,
+        SHIELD,
+        EXTRA_BOMBS
     };
     TileType GetTileTypeAt(int x, int y);
     void SetTile(int x, int y, TileType);
+    void RemovePowerUpAt(int x, int y);
 
 private:
     bool isRendered;
@@ -45,5 +54,7 @@ private:
     std::vector<SDL_Texture*> floorTextures;
     std::vector<SDL_Texture*> breakableTextures;
     std::vector<SDL_Texture*> unbreakableTextures;
+    std::vector<PowerUp> powerUps;
+    std::map<std::pair<int, int>, PowerUpType> hiddenPowerUps;
 };
 #endif

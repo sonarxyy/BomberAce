@@ -21,11 +21,13 @@ public:
     void Kill();
     bool IsAlive() const { return alive; }
     SDL_Rect GetRect() const;
+    void CollectPowerUp(TileManager& map);
 
 private:
     int x, y;
     int speed;
     int width, height;
+    int explosionRadius;
     bool alive;
     SDL_Renderer* renderer;
     

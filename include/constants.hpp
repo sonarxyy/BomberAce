@@ -60,4 +60,16 @@ constexpr const int SPRITE_TILE = 32;
 
 // Level
 constexpr const char* LEVEL_FOLDER = "assets/level/";
+
+// Power-ups
+constexpr const char* BOMB_RANGE_FILE = "assets/power-ups/bomb_range.png";
+constexpr const char* SHIELD_FILE = "assets/power-ups/shield.png";
+constexpr const char* EXTRA_BOMB_FILE = "assets/power-ups/extra_bomb.png";
+constexpr const char* SPEED_FILE = "assets/power-ups/speed.png";
+constexpr const int POWER_UP_WIDTH = 70;
+constexpr const int POWER_UP_HEIGHT = 75;
+
+// Victory
+constexpr const char* VICTORY_FILE = "assets/image/victory.png";
+
 #endif

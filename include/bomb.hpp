@@ -22,7 +22,7 @@ public:
 		ENEMY
 	} ownerType;
 
-	Bomb(int px, int py, SDL_Renderer* renderer, TileManager& map, const Entity& owner);
+	Bomb(int px, int py, SDL_Renderer* renderer, TileManager& map, Entity owner, int ownerExplosionRadius);
 	void LoadTexture(SDL_Renderer* renderer);
 	void Update(TileManager& map, Player& player, std::vector<Enemy>& enemies, std::vector<Explosion>& explosions, SDL_Renderer* renderer);
 	void Render(SDL_Renderer* renderer);

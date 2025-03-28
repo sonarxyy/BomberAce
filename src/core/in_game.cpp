@@ -5,17 +5,17 @@ InGame::InGame(SDL_Renderer* renderer)
     textManager = new TextManager(renderer);
     textureManager = new TextureManager(renderer);
     audioManager = new AudioManager();
-
     tileManager = new TileManager(renderer, levelManager);
+
     level = 1;
     score = 0;
     hud = new HUD(renderer);
     player = new Player(renderer, *tileManager);
 
-    // Initialize enemies
     enemies.push_back(Enemy(864, 48, renderer, 0));
     enemies.push_back(Enemy(48, 864, renderer, 1));
     enemies.push_back(Enemy(864, 864, renderer, 2));
+
 
     startTime = SDL_GetTicks();
     levelDuration = 150000;
@@ -31,18 +31,31 @@ InGame::~InGame() {
 }
 
 void InGame::HandleInputs(const Uint8* keyState) {
-    if (player->GetHealth() > 0) {
+    if (levelManager.IsLastLevel() && enemies.empty()) {
+        if (keyState[SDL_SCANCODE_R]) {
+            RestartGame();
+        }
+    }
+    else if (player->GetHealth() > 0 && remainingTime > 0) {
         player->HandleInput(keyState, *tileManager, bombs);
     }
-    // Handle input events here (e.g., keyboard input).
+    else {
+        if (keyState[SDL_SCANCODE_R]) { // Press 'R' to restart level
+            RestartLevel();
+        }
+    }
 }
 
 void InGame::Update() {
     Uint32 elapsedTime = SDL_GetTicks() - startTime;
-    Uint32 remainingTime = (levelDuration > elapsedTime) ? (levelDuration - elapsedTime) : 0;
+    remainingTime = (levelDuration > elapsedTime) ? (levelDuration - elapsedTime) : 0;
 
-    if (player->GetHealth() == 0 && remainingTime == 0) {
-        return; // Stop updating game objects if the player is dead or time reach 0;
+    if (levelManager.IsLastLevel() && enemies.empty()) {
+        return;
+    }
+
+    if (player->GetHealth() == 0 || remainingTime == 0) {
+        return;
     }
 
     for (auto& enemy : enemies) {
@@ -117,10 +130,16 @@ void InGame::Update() {
 void InGame::Render() {
     tileManager->Render(renderer);
 
-    if (player->GetHealth() == 0) {
+    if (levelManager.IsLastLevel() && enemies.empty()) {
+        RenderGameOverScreen();
+        return;
+    }
+
+    if (player->GetHealth() == 0 || remainingTime == 0) {
         player->GameOver();
         return;
     }
+
     player->Render(renderer); // Render player
 
     for (auto& enemy : enemies) {
@@ -137,10 +156,27 @@ void InGame::Render() {
     hud->Render();
 }
 
+void InGame::RestartLevel() {
+    levelManager.ReloadLevel();
+    tileManager->LoadLevel(levelManager);
+    startTime = SDL_GetTicks();
+    player->Reset();
+    bombs.clear();
+    explosions.clear();
+    enemies.clear();
+
+    // Respawn enemies at the original positions
+    enemies.push_back(Enemy(864, 48, renderer, 0));
+    enemies.push_back(Enemy(48, 864, renderer, 1));
+    enemies.push_back(Enemy(864, 864, renderer, 2));
+}
+
 void InGame::NextLevel() {
+    if (levelManager.IsLastLevel()) {
+        return;
+    }
     FadeTransition::fade(renderer, false);
     level++;
-    score = 0;
 
     levelManager.NextLevel();
 
@@ -158,4 +194,38 @@ void InGame::NextLevel() {
     enemies.push_back(Enemy(864, 864, renderer, 2));
 
     FadeTransition::fade(renderer, true);
+}
+
+void InGame::RestartGame() {
+    level = 1;
+    score = 0;
+
+    levelManager.LoadLevel(LEVEL_FOLDER);
+    tileManager->LoadLevel(levelManager);
+
+    player->Reset();
+
+    startTime = SDL_GetTicks();
+    bombs.clear();
+    explosions.clear();
+    enemies.clear();
+
+    enemies.push_back(Enemy(864, 48, renderer, 0));
+    enemies.push_back(Enemy(48, 864, renderer, 1));
+    enemies.push_back(Enemy(864, 864, renderer, 2));
+}
+
+void InGame::RenderGameOverScreen() {
+    SDL_RenderClear(renderer);
+
+    SDL_Texture* victoryTexture = textureManager->LoadTexture(VICTORY_FILE);
+    SDL_RenderCopy(renderer, victoryTexture, NULL, NULL);
+
+    TTF_Font* font = textManager->LoadFont(OPEN_SANS_FONT_FILE, 30);
+    SDL_Texture* texture = textManager->CreateTextureFromText(font, "Press R to restart", WHITE);
+    int w, h;
+    SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+    SDL_Rect destRect = { (SCREEN_WIDTH - w) / 2, (SCREEN_HEIGHT) - 50, w, h};
+
+    SDL_RenderCopy(renderer, texture, NULL, &destRect);
 }

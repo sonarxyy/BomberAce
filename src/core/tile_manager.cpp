@@ -10,10 +10,11 @@ TileManager::TileManager(SDL_Renderer* renderer, const LevelManager& levelManage
 void TileManager::LoadLevel(const LevelManager& levelManager) {
     const auto& level = levelManager.getMap();
 
-    // Ensure we clear the old level data before loading a new one
     map.clear();
     floorTextureIndex.clear();
     breakableTextureIndex.clear();
+    powerUps.clear();
+    hiddenPowerUps.clear(); // Store hidden power-ups separately
 
     int rows = MAP_ROWS;
     int cols = MAP_COLS;
@@ -31,6 +32,13 @@ void TileManager::LoadLevel(const LevelManager& levelManager) {
 
             if (map[row][col] == static_cast<int>(TileType::BREAKABLE)) {
                 breakableTextureIndex[row][col] = rand() % breakableTextures.size();
+            }
+
+            if (map[row][col] == static_cast<int>(TileType::POWER_UP)) {
+                // Instead of directly placing a power-up, hide it inside a breakable tile
+                map[row][col] = static_cast<int>(TileType::BREAKABLE);
+                PowerUpType type = static_cast<PowerUpType>(10 + rand() % 4);
+                hiddenPowerUps[{col, row}] = type; // Store it for later reveal
             }
         }
     }
@@ -65,6 +73,10 @@ void TileManager::Render(SDL_Renderer* renderer) {
             }
         }
     }
+    // Render power-ups
+    for (auto& powerUp : powerUps) {
+        powerUp.Render(renderer);
+    }
 }
 
 
@@ -92,8 +104,18 @@ bool TileManager::IsWall(int col, int row) const {
 bool TileManager::DestroyTile(int col, int row) {
     if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) return true;
 
-    if (map[row][col] == 2) {
+    if (map[row][col] == 2) { // Breakable tile
         map[row][col] = 0; // Remove the destructible tile
+
+        // Check if a power-up was hidden inside
+        auto it = hiddenPowerUps.find({ col, row });
+        if (it != hiddenPowerUps.end()) {
+            PowerUpType type = it->second;
+            powerUps.emplace_back(col * TILE_SIZE, row * TILE_SIZE, type, renderer);
+            hiddenPowerUps.erase(it); // Remove from hidden list
+            map[row][col] = static_cast<int>(TileType::POWER_UP); // Update tile type
+        }
+
         return false; // Continue explosion
     }
 
@@ -116,6 +138,10 @@ TileManager::TileType TileManager::GetTileTypeAt(int x, int y) {
         return TileType::BREAKABLE; // Breakable wall
     }
 
+    if (map[tileY][tileX] == 9) {
+        return TileType::POWER_UP;
+    }
+
     // Use floorTextureIndex to determine GRASS or SNOW
     switch (floorTextureIndex[tileY][tileX]) {
     case 0: return TileType::GRASS;
@@ -127,6 +153,22 @@ TileManager::TileType TileManager::GetTileTypeAt(int x, int y) {
 void TileManager::SetTile(int col, int row, TileType type) {
     if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) return;
     map[row][col] = static_cast<int>(type);
+}
+
+void TileManager::RemovePowerUpAt(int x, int y) {
+    SDL_Rect temp = { x / TILE_SIZE * TILE_SIZE, y / TILE_SIZE * TILE_SIZE, TILE_SIZE, TILE_SIZE };
+    auto it = std::remove_if(powerUps.begin(), powerUps.end(), [&](const PowerUp& p) {
+        SDL_Rect temp2 = p.GetRect();
+        return SDL_HasIntersection(&temp2, &temp);
+    });
+
+    if (it != powerUps.end()) {
+        powerUps.erase(it, powerUps.end());
+    }
+}
+
+std::vector<PowerUp> TileManager::GetPowerUps() {
+    return powerUps;
 }
 
 
