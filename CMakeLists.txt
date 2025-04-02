@@ -29,5 +29,5 @@ add_custom_command(TARGET "BomberAce"
 add_custom_command(TARGET "BomberAce"
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-    ${CMAKE_SOURCE_DIR}/lib/SDL2.dll ${CMAKE_SOURCE_DIR}/lib/SDL2_image.dll ${CMAKE_SOURCE_DIR}/lib/SDL2_mixer.dll ${CMAKE_SOURCE_DIR}/lib/SDL2_ttf.dll
+    ${CMAKE_SOURCE_DIR}/lib/SDL2.dll ${CMAKE_SOURCE_DIR}/lib/SDL2_image.dll ${CMAKE_SOURCE_DIR}/lib/SDL2_mixer.dll ${CMAKE_SOURCE_DIR}/lib/SDL2_ttf.dll ${CMAKE_SOURCE_DIR}/lib/libgcc_s_seh-1.dll ${CMAKE_SOURCE_DIR}/lib/libstdc++-6.dll
     ${CMAKE_BINARY_DIR})
