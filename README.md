@@ -7,7 +7,7 @@ Small Game Project Written in C++ using [SDL2](https://wiki.libsdl.org/SDL2/Fron
 
 
 # Introduction and tutorial
-[Demo](https://drive.google.com/file/d/1fnH_TrWjgt5fFRNFARNGh5FXhrA8VrTF/view?usp=sharing)
+[Demo](https://drive.google.com/file/d/1fnH_TrWjgt5fFRNFARNGh5FXhrA8VrTF/view?usp=sharing)  
 In this game, you will become a siamese cat, your mission is to defeat other cats by placing bombs and pick up power-ups.  
 Press W, A, S, D or arrow keys to move up, left, right, down.  
 Press space to place bomb.
